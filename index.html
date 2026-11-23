@@ -885,14 +885,18 @@ try{
   uT=gl.getUniformLocation(prog,'t');uR=gl.getUniformLocation(prog,'r');uM=gl.getUniformLocation(prog,'m');uI=gl.getUniformLocation(prog,'I');
   gl.uniform2f(uR,cv.width,cv.height);
 }catch(e){gl=null;cv.style.background='radial-gradient(ellipse at 40% 40%,#5E0C0B,#0D0D0D 70%)'}
-let liqI=1;
-function frame(){
-  if(!liqOn||!gl)return;
+let liqI=1,liqOff=false,fl=0,fAvg=16,fN=0,fQ=2;
+const STATIC='radial-gradient(ellipse 80% 70% at 40% 45%,#6a0f0d 0%,#2a0707 40%,#0D0D0D 75%)';
+function setQ(q){fQ=q;if(q===0||!gl){liqOff=true;cv.style.background=STATIC;if(gl){gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT)}return}
+  liqOff=false;cv.style.background='';const w=q===2?960:480,h=q===2?540:270;cv.width=w;cv.height=h;gl.viewport(0,0,w,h);gl.uniform2f(uR,w,h)}
+function frame(t){
+  if(!liqOn||!gl||liqOff)return;
+  if(fl){const dt=t-fl;fAvg=fAvg*.92+dt*.08;fN++;if(fN>90&&fAvg>34){fN=0;fAvg=16;setQ(fQ-1);if(liqOff)return}}fl=t;
   mx+=(tmx-mx)*.04;my+=(tmy-my)*.04;
   gl.uniform1f(uT,reduce?10:(performance.now()-t0)/1000);gl.uniform2f(uM,mx,my);gl.uniform1f(uI,liqI);
   gl.drawArrays(gl.TRIANGLE_STRIP,0,4);requestAnimationFrame(frame);
 }
-function liquid(on){liqI=scenes[cur]&&scenes[cur].classList.contains('s-open')?1.22:1;stage.classList.toggle('liq',on);if(on&&!liqOn){liqOn=true;requestAnimationFrame(frame)}else if(!on)liqOn=false}
+function liquid(on){if(!on)fl=0;liqI=scenes[cur]&&scenes[cur].classList.contains('s-open')?1.22:1;stage.classList.toggle('liq',on);if(on&&!liqOn){liqOn=true;requestAnimationFrame(frame)}else if(!on)liqOn=false}
 
 /* ── navegação ── */
 const segs=document.getElementById('segs'),idx=document.getElementById('idxList'),index=document.getElementById('index');
@@ -952,6 +956,7 @@ addEventListener('keydown',e=>{const k=e.key;
   else if(k==='f'||k==='F')fs();
   else if(k==='b'||k==='B'){stage.style.filter=stage.style.filter?'':'brightness(0)'}
   else if(k==='p'||k==='P')presenter();
+  else if(k==='l'||k==='L'){if(liqOff){setQ(2);fl=0;if(liqOn)requestAnimationFrame(frame)}else setQ(0)}
 });
 let sx=null,sy=0;
 vp.addEventListener('pointerdown',e=>{if(e.target.closest('.cmp,button,a'))return;sx=e.clientX;sy=e.clientY});
@@ -989,7 +994,7 @@ hooks['s-res']={leave(){rc.querySelectorAll('.col').forEach(x=>x.style.opacity='
 const wImgs=[...document.querySelectorAll('#workBg img')],wFilm=[...document.querySelectorAll('#workFilm button')];let wI=0,wT;
 function wShow(i){wI=i;wImgs.forEach((im,j)=>im.classList.toggle('show',j===i));wFilm.forEach((b,j)=>b.classList.toggle('sel',j===i));document.getElementById('workCap').textContent=wImgs[i].dataset.c}
 wFilm.forEach((b,i)=>b.onclick=()=>{clearInterval(wT);wShow(i)});
-hooks['s-work']={enter(){wShow(0);if(!reduce)wT=setInterval(()=>wShow((wI+1)%wImgs.length),5200)},leave(){clearInterval(wT)}};
+hooks['s-work']={enter(){wShow(0)},leave(){}};
 
 /* ── 10 revelação ── */
 hooks['s-rev']={};
@@ -1030,14 +1035,14 @@ const mB=[...document.querySelectorAll('#modList button')],mS=document.getElemen
 const mImgs=mB.map(b=>{const im=new Image();im.src='img/'+b.dataset.i+'.webp';im.alt='Tela real: '+b.textContent.replace(/^\d+/,'');im.draggable=false;mS.insertBefore(im,mS.firstChild);return im});
 function mShow(i){mI=i;mB.forEach((b,j)=>b.classList.toggle('act',j===i));mImgs.forEach((im,j)=>im.classList.toggle('show',j===i));mT.textContent=mB[i].dataset.t}
 mB.forEach((b,i)=>b.onmouseenter=b.onclick=()=>{clearInterval(mTm);mShow(i)});mShow(0);
-hooks['s-mod']={enter(){mShow(0);if(!reduce)mTm=setInterval(()=>mShow((mI+1)%mB.length),3200)},leave(){clearInterval(mTm)}};
+hooks['s-mod']={enter(){mShow(0)},leave(){}};
 
 /* ── 15 cliente ── */
 const cT=[...document.querySelectorAll('#cliTabs button')],cImg=document.getElementById('cliImg');let cI=0,cTm;
 cT.forEach(b=>{const im=new Image();im.src='img/'+b.dataset.i+'.webp'});
 function cShow(i){cI=i;cT.forEach((b,j)=>b.classList.toggle('act',j===i));cImg.style.opacity=0;setTimeout(()=>{cImg.src='img/'+cT[i].dataset.i+'.webp';cImg.style.opacity=1},220)}
 cT.forEach((b,i)=>b.onclick=()=>{clearInterval(cTm);cShow(i)});
-hooks['s-cli']={enter(){if(!reduce)cTm=setInterval(()=>cShow((cI+1)%cT.length),3200)},leave(){clearInterval(cTm)}};
+hooks['s-cli']={enter(){cShow(0)},leave(){}};
 
 /* ── 16 antes × depois ── */
 const cmp=document.getElementById('cmp');let drag=false,cA;

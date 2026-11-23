@@ -5,4 +5,4 @@ Apresentação interativa do TCC da Verenna Digital (ETEC Paulistano · Desenvol
 - Online: https://twyck.github.io/verenna-tcc/
 - Offline: baixe o repositório (Code → Download ZIP), descompacte e abra `index.html` no Chrome. Funciona sem internet.
 
-Controles: ← → ou passador de slides · P modo apresentador (abre a janela com falas, cronômetro e próximo slide) · F tela cheia · G índice · B tela preta.
+Controles: ← → ou passador de slides · P modo apresentador (abre a janela com falas, cronômetro e próximo slide) · F tela cheia · G índice · B tela preta · L liga/desliga o fundo líquido (para notebook fraco).
