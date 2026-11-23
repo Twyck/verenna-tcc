@@ -835,6 +835,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   <div class="count"><span id="cnum">01</span><small>/ <span id="ctot">24</span></small></div>
   <div class="segs" id="segs"></div>
   <div class="ctl">
+    <button id="bPres" aria-label="Modo apresentador (P)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg></button>
     <button id="bIdx" aria-label="Índice"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M4 6h16M4 12h16M4 18h10"/></svg></button>
     <button id="bFs" aria-label="Tela cheia"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
     <button id="bPrev" aria-label="Anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M15 5l-7 7 7 7"/></svg></button>
@@ -899,6 +900,7 @@ scenes.forEach((s,i)=>{const b=document.createElement('button');b.setAttribute('
   const li=document.createElement('li');li.innerHTML=`<button><span>${pad(i+1)}</span>${s.dataset.title}</button>`;li.firstChild.onclick=()=>{toggleIdx(false);go(i)};idx.appendChild(li)});
 function toggleIdx(v){index.classList.toggle('open',v??!index.classList.contains('open'))}
 document.getElementById('bIdx').onclick=()=>toggleIdx();
+document.getElementById('bPres').onclick=()=>presenter();
 const fs=()=>{if(document.fullscreenElement)document.exitFullscreen?.();else document.documentElement.requestFullscreen?.().catch(()=>{})};
 document.getElementById('bFs').onclick=fs;
 
@@ -910,6 +912,7 @@ function applySteps(){
   s.querySelectorAll('[data-at]').forEach(el=>{const was=el.classList.contains('in'),now=+el.dataset.at<=step;el.classList.toggle('in',now);if(now&&!was){if(el.dataset.count)countUp(el);el.querySelectorAll('[data-count]').forEach(countUp)}});
   for(let k=1;k<=6;k++)s.classList.toggle('s'+k,step>=k);
   const h=hooks[key(s)];h&&h.step&&h.step(step);
+  typeof pSync==='function'&&pSync();
 }
 function hud(){
   const s=scenes[cur];stage.dataset.tone=s.classList.contains('light')?'light':s.classList.contains('red')?'red':'dark';
@@ -917,6 +920,7 @@ function hud(){
   [...segs.children].forEach((b,i)=>{b.classList.toggle('done',i<cur);b.classList.toggle('now',i===cur)});
   [...idx.querySelectorAll('button')].forEach((b,i)=>b.classList.toggle('now',i===cur));
   try{history.replaceState(null,'','#cena-'+(cur+1))}catch(e){}
+  typeof pSync==='function'&&pSync();
 }
 function show(i,st){
   stage.style.setProperty('--dir',i>=cur?1:-1);
@@ -947,6 +951,7 @@ addEventListener('keydown',e=>{const k=e.key;
   else if(k==='g'||k==='G')toggleIdx();else if(k==='Escape')toggleIdx(false);
   else if(k==='f'||k==='F')fs();
   else if(k==='b'||k==='B'){stage.style.filter=stage.style.filter?'':'brightness(0)'}
+  else if(k==='p'||k==='P')presenter();
 });
 let sx=null,sy=0;
 vp.addEventListener('pointerdown',e=>{if(e.target.closest('.cmp,button,a'))return;sx=e.clientX;sy=e.clientY});
@@ -1067,6 +1072,79 @@ FP.forEach(([x,y],i)=>{const im=new Image();im.src=`img/team${i}.webp`;im.alt=''
   const f=new Image();f.src=`img/team${i}.webp`;f.alt='';f.style.setProperty('--i',i);fin.appendChild(f)});
 const areas=[...document.querySelectorAll('#areas button')],names=document.getElementById('names');
 areas.forEach(b=>b.onclick=()=>{areas.forEach(x=>x.classList.toggle('act',x===b));const a=b.dataset.a;names.classList.toggle('f',!!a);[...names.children].forEach(p=>p.classList.toggle('hit',!!a&&p.dataset.a.split(' ').includes(a)))});
+
+/* ── MODO APRESENTADOR (P) ── */
+const NOTES={
+'s-open':['Somos a Verenna Digital: oito alunos da ETEC Paulistano.','Nosso slogan resume o que fazemos: transformar problemas em soluções digitais.','Hoje apresentamos o RevisaCar. (clique na tela para o sinal de sonar)'],
+'s-name':['Verenna vem de Verena, nome germânico: “a verdade”, “a sincera”, “a que fala a verdade”.','Também consideramos Verus. O segundo “n” deu estética e originalidade. (→ o n cai)','O nome é a nossa promessa. (→ frase final)'],
+'s-pod':['A orca é um dos animais mais inteligentes e organizados do oceano: vive em grupo, protege a família, caça com estratégia.','Cada → revela um pilar: inteligência aplicada à tecnologia, segurança e proteção de dados, trabalho em equipe, estratégia e inovação, lealdade e parcerias sólidas.'],
+'s-col':['White Smoke: leveza. Coral Red: energia, e rompe com o azul padrão do mercado de tecnologia. Obsidian Black: autoridade e profundidade.','Cada → abre uma cor.'],
+'s-two':['Verenna é a empresa; RevisaCar é o produto. Marcas da mesma família, com identidades separadas.','Logo do RevisaCar: carro + lupa = vistoria e análise técnica, em versões vermelha, preta e branca.'],
+'s-chaos':['Muitas oficinas pequenas e médias ainda controlam tudo em papel, planilha e WhatsApp.','Consequência: informação perdida, retrabalho e decisão sem dados. (→ três palavras, depois a corrente)'],
+'s-orig':['O problema veio da vivência no SENAI, do cliente e de visitas à oficina.','O cliente já tinha usado o Chave Dez: caro e não atendia. Voltou para o Excel.'],
+'s-res':['Pesquisa de campo com 53 estabelecimentos.','15 não usam sistema mas querem; 10 não usam e não querem; 28 já usam.','43 de 53 usam ou querem um sistema; quem usa reclama de limitações e custo.'],
+'s-o3l':['Nosso cliente real: Oficina 3L, de Lucas Andrelo dos Santos.','2 mecânicos, cerca de 7 carros por semana, linha leve, atendimento presencial em Franco da Rocha.'],
+'s-work':['O serviço é bom; a gestão era o problema.','Tudo em planilhas do Excel, orçamentos e avisos por WhatsApp e telefone, informações se perdendo.'],
+'s-rev':['Apresentamos o RevisaCar: sistema de gestão para oficinas mecânicas.','Já está no ar em revisacarapp.com. (→ a tela sobe)','Objetivos: controle financeiro, estoque, ordens de serviço e clientes num só lugar.'],
+'s-anat':['A primeira tela do dia: “Hoje”.','Cada →: resumo do dia, carros na oficina agora, agenda de hoje e o que precisa de atenção.'],
+'s-os':['O caminho de uma OS em 5 passos: abrir, ficha de entrada, fotos obrigatórias, inspeção e quadro de atendimento.','Depois de concluída, a OS não pode mais ser alterada: integridade dos dados.'],
+'s-ins':['Checklist por sistema do carro: motor, frenagem, suspensão, elétrico, transmissão, pneus, carroceria, interior e personalizada.','Cada item: OK, Atenção, Crítico ou N/A. O encerramento tem assinatura e gera o PDF.'],
+'s-mod':['Dez módulos integrados.','Cliente se liga a veículo, agendamento e OS; a OS alimenta o painel e o financeiro. (passe o mouse na lista)'],
+'s-cli':['O dono do carro também tem o app: é um PWA, instala sem loja.','Aprova ou recusa orçamento, agenda, acompanha a saúde do carro e a garantia.','Prioridade do projeto: aumentar a confiança do cliente.'],
+'s-cmp':['Arraste a alça ao vivo: antes, papel e mensagem solta; depois, a oficina num lugar só.'],
+'s-arch':['Três camadas: React com Vite e TypeScript; API em Django REST; PostgreSQL no Supabase; publicado no Render a partir do GitHub.','Acesso por papel (RBAC), login separado de dono e funcionário, LGPD e escapeHtml() no PDF.'],
+'s-qa':['28 casos de teste executados, todos aprovados, de 39 planejados.','3 problemas achados em testes exploratórios, 2 já corrigidos. Trabalhamos com Scrum.'],
+'s-tl':['Fevereiro a novembro de 2026. (→ a orca nada a linha do tempo)','Fundação, pesquisa, requisitos, protótipos, telas, QA, correções, homologação, monitoramento e a defesa hoje.'],
+'s-team':['Oito pessoas em cinco frentes, com orientação da Prof.ª Pamela Andrelo.','Clique nas frentes para destacar quem fez o quê.'],
+'s-ig':['A Verenna também se comunica: @verenna.digital.','Em 30 dias: 1.940 visualizações, 679 contas alcançadas, 75 seguidores. O post mais visto teve 825 visualizações.'],
+'s-end':['Um problema real, confirmado com 53 estabelecimentos.','Uma solução prática, com tecnologia aplicada à gestão e base para crescer.','Próximos passos: uso diário na Oficina 3L, novas oficinas e terminar o plano de testes.'],
+'s-fin':['Obrigado. Abrir para perguntas.','Se pedirem demo: revisacarapp.com.']
+};
+const thumb=i=>new URL('thumbs/s'+String(i).padStart(2,'0')+'.jpg',location.href).href;
+let pw=null,pT0=null,pTick=null;
+const PCSS=`*{box-sizing:border-box;margin:0;padding:0}body{background:#0D0D0D;color:#F2F2F2;font-family:"DM Sans",system-ui,sans-serif;height:100vh;display:grid;grid-template-rows:auto 1fr auto;gap:18px;padding:22px 26px;overflow:hidden}
+.top{display:flex;justify-content:space-between;align-items:center;gap:20px}.t{font:800 64px "DM Mono",ui-monospace,monospace;letter-spacing:-.02em}.clock{font:500 26px "DM Mono",monospace;color:#bbb}
+.top button{font:700 18px "DM Sans",sans-serif;color:#F2F2F2;background:#222;border:2px solid #444;border-radius:99px;padding:10px 18px;cursor:pointer}
+.mid{display:grid;grid-template-columns:1.25fr 1fr;gap:26px;min-height:0}.cur img,.nxt img{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:10px;background:#222;display:block}
+.cur img{box-shadow:0 0 0 4px #FF3231}.lab{font:500 16px "DM Mono",monospace;letter-spacing:.12em;text-transform:uppercase;color:#FF3231;margin:0 0 8px}
+.ttl{font:800 30px "DM Sans",sans-serif;margin:10px 0 4px}.st{font:500 18px "DM Mono",monospace;color:#bbb}
+.right{display:grid;grid-template-rows:auto 1fr;gap:18px;min-height:0}.notes{overflow:auto;background:#161616;border-radius:14px;padding:22px}
+.notes li{font-size:27px;line-height:1.38;margin:0 0 16px 22px}.bot{display:flex;gap:12px;align-items:center}.bot button{font:800 22px "DM Sans",sans-serif;color:#fff;background:#FF3231;border:0;border-radius:14px;padding:16px 28px;cursor:pointer}
+.bot button.g{background:#2a2a2a}.bot span{margin-left:auto;font:500 16px "DM Mono",monospace;color:#888}`;
+function pBuild(doc){
+  doc.title='Apresentador · Verenna';
+  const st=doc.createElement('style');st.textContent=PCSS;doc.head.appendChild(st);
+  const fl=doc.createElement('link');fl.rel='stylesheet';fl.href=new URL('fonts.css',location.href).href;doc.head.appendChild(fl);
+  doc.body.innerHTML=`<div class="top"><div><span class="t" id="pt">00:00</span></div><div style="display:flex;gap:14px;align-items:center"><span class="clock" id="pc"></span><button id="pr">zerar cronômetro</button></div></div>
+  <div class="mid"><div class="cur"><p class="lab">Agora</p><img id="pi" alt=""><p class="ttl" id="pn"></p><p class="st" id="ps"></p></div>
+  <div class="right"><div class="nxt"><p class="lab" style="color:#888">Próximo</p><img id="pni" alt="" style="opacity:.8"><p class="st" id="pnn" style="margin-top:8px;color:#ddd;font-size:20px"></p></div><div class="notes"><p class="lab">Fala</p><ul id="pnotes"></ul></div></div></div>
+  <div class="bot"><button class="g" id="pb">← voltar</button><button id="pf">avançar →</button><span>← → ou passador · B tela preta · G índice</span></div>`;
+  const $=id=>doc.getElementById(id);
+  $('pb').onclick=()=>prev();$('pf').onclick=()=>next();$('pr').onclick=()=>{pT0=Date.now()};
+  doc.addEventListener('keydown',e=>{const k=e.key;if(['ArrowRight','PageDown',' ','Enter','ArrowDown'].includes(k)){e.preventDefault();next()}else if(['ArrowLeft','PageUp','Backspace','ArrowUp'].includes(k)){e.preventDefault();prev()}else if(k==='b'||k==='B'){stage.style.filter=stage.style.filter?'':'brightness(0)'}else if(k==='g'||k==='G')toggleIdx()});
+}
+function pTickFn(){if(!pw||pw.closed)return;const d=pw.document||pw;const e=Math.floor((Date.now()-(pT0||Date.now()))/1000);const q=x=>d.getElementById?d.getElementById(x):d.querySelector('#'+x);
+  q('pt').textContent=String(Math.floor(e/60)).padStart(2,'0')+':'+String(e%60).padStart(2,'0');q('pc').textContent=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}
+function pSync(){if(!pw||pw.closed)return;const d=pw.document||pw;const q=x=>d.getElementById?d.getElementById(x):d.querySelector('#'+x);
+  const s=scenes[cur],k=key(s),st=steps(cur);
+  q('pi').src=thumb(cur);q('pn').textContent=pad(cur+1)+' · '+s.dataset.title;q('ps').textContent=st?('passo '+step+' de '+st):'sem passos';
+  const nx=step<st?cur:cur+1;q('pni').src=nx<N?thumb(nx):'';q('pnn').textContent=nx<N?(nx===cur?'mesmo slide, próximo passo':pad(nx+1)+' · '+scenes[nx].dataset.title):'fim';
+  q('pnotes').innerHTML=(NOTES[k]||[]).map(t=>'<li>'+t+'</li>').join('')}
+let pOverlay=null;
+function presenter(){
+  if(pw&&!pw.closed){pw.focus&&pw.focus();return}
+  let w=null;try{w=window.open('','verenna_apresentador','width=1280,height=800')}catch(e){}
+  if(w&&w.document){pw=w;w.document.open();w.document.write('<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"></head><body></body></html>');w.document.close();pBuild(w.document)}
+  else{ // fallback: sobreposição na mesma tela (ensaio)
+    if(!pOverlay){pOverlay=document.createElement('div');pOverlay.style.cssText='position:fixed;inset:0;z-index:9999;background:#0D0D0D';const sh=pOverlay.attachShadow({mode:'open'});
+      const host=document.implementation.createHTMLDocument('p');pBuild(host);sh.innerHTML='<style>'+PCSS.replace(/body\{/,':host>div.root{')+'</style><div class="root" style="height:100vh;display:grid;grid-template-rows:auto 1fr auto;gap:18px;padding:22px 26px">'+host.body.innerHTML+'</div>';
+      const $=id=>sh.getElementById(id);$('pb').onclick=()=>prev();$('pf').onclick=()=>next();$('pr').onclick=()=>{pT0=Date.now()};
+      const x=document.createElement('button');x.textContent='fechar (P)';x.style.cssText='position:absolute;right:26px;bottom:24px;font:700 18px sans-serif;padding:12px 18px;border-radius:99px;border:0;background:#333;color:#fff;cursor:pointer';x.onclick=()=>presenter();sh.appendChild(x);
+      pw={closed:false,document:sh,focus(){} };document.body.appendChild(pOverlay)}
+    else{pOverlay.remove();pOverlay=null;pw=null;return}
+  }
+  if(!pT0)pT0=Date.now();clearInterval(pTick);pTick=setInterval(pTickFn,500);pSync();pTickFn();
+}
 
 document.querySelectorAll('img').forEach(i=>i.draggable=false);
 const m=/^#cena-(\d+)$/.exec(location.hash);
