@@ -369,7 +369,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 /* ═════════ 15 · APP DO CLIENTE ═════════ */
 .s-cli .head{position:absolute;left:120px;top:140px;width:760px;display:grid;gap:24px}
 .s-cli .feats{position:absolute;left:120px;top:520px;width:740px;display:grid;gap:18px}
-.s-cli .feats div{display:grid;grid-template-columns:270px 1fr;gap:20px;border-top:2px solid var(--line);padding-top:14px}
+.s-cli .feats div{display:grid;grid-template-columns:310px 1fr;gap:20px;border-top:2px solid var(--line);padding-top:14px}
 .s-cli .feats b{font-size:32px;font-weight:850;letter-spacing:-.02em}
 .s-cli .feats span{font-size:25px;line-height:1.35;color:var(--soft)}
 .s-cli .phones{position:absolute;left:960px;top:96px;width:840px;height:760px}
@@ -711,20 +711,20 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 
 <!-- 15 APP DO CLIENTE -->
 <section class="scene red s-cli" data-title="App do cliente" data-chap="RevisaCar">
-  <div class="head"><p class="kick rv">App do cliente · PWA</p><h2 class="h2"><span class="ln"><span>E o dono do carro</span></span><span class="ln"><span style="--d:100;color:var(--ink)">acompanha tudo.</span></span></h2><p class="lede rv" style="--d:300">Abre no navegador e instala no celular, sem loja de aplicativos.</p><span class="wip rv" style="--d:400">Visual novo em revisão, antes de ir ao ar</span></div>
+  <div class="head"><p class="kick rv">App do cliente · PWA</p><h2 class="h2"><span class="ln"><span>E o dono do carro</span></span><span class="ln"><span style="--d:100;color:var(--ink)">acompanha tudo.</span></span></h2><p class="lede rv" style="--d:300">Abre no navegador e instala no celular, sem loja de aplicativos.</p></div>
   <div class="feats rv" style="--d:450">
-    <div><b>Orçamentos</b><span>aprova ou recusa, com comentário</span></div>
-    <div><b>Agendamento</b><span>serviço, data e horário em 4 passos</span></div>
-    <div><b>Saúde do carro</b><span>manutenções e lembretes por quilometragem</span></div>
-    <div><b>Histórico</b><span>serviços feitos, com busca e detalhe</span></div>
+    <div><b>Orçamentos</b><span>vê item por item e aprova ou recusa</span></div>
+    <div><b>Agendamento</b><span>serviço, dia e horário em 4 passos</span></div>
+    <div><b>Saúde do carro</b><span>o que está crítico, em atenção ou ok</span></div>
+    <div><b>Link do orçamento</b><span>aprova mesmo sem instalar o app</span></div>
   </div>
   <div class="phones">
-    <div class="phone a rv" style="--d:300"><div class="s"><img src="img/cli-saude.webp" alt="Saúde do veículo"></div></div>
-    <div class="phone b rv" style="--d:200"><div class="s"><img id="cliImg" src="img/cli-inicio.webp" alt="Tela inicial do app do cliente"></div></div>
-    <div class="phone c rv" style="--d:400"><div class="s"><img src="img/cli-orcamentos.webp" alt="Orçamentos"></div></div>
+    <div class="phone a rv" style="--d:300"><div class="s"><img src="img/fc06.webp" alt="Meu veículo e saúde do carro"></div></div>
+    <div class="phone b rv" style="--d:200"><div class="s"><img id="cliImg" src="img/fc01.webp" alt="Tela inicial do app do cliente"></div></div>
+    <div class="phone c rv" style="--d:400"><div class="s"><img src="img/fc04.webp" alt="Orçamento"></div></div>
   </div>
   <div class="tabs rv" style="--d:600" id="cliTabs">
-    <button class="act" data-i="cli-inicio">Meu carro</button><button data-i="cli-saude">Saúde</button><button data-i="cli-orcamentos">Orçamentos</button><button data-i="cli-agendar">Agendar</button><button data-i="cli-servicos">Serviços</button><button data-i="cli-garantia">Garantia</button>
+    <button class="act" data-i="fc01">Início</button><button data-i="fc04">Orçamento</button><button data-i="fc03">Serviços</button><button data-i="fc05">Agendar</button><button data-i="fc06">Veículo</button><button data-i="fc08">Avisos</button><button data-i="fc09">Pelo link</button>
   </div>
 </section>
 
@@ -1102,7 +1102,7 @@ const NOTES={
 's-os':['O caminho de uma OS em 5 passos: abrir, ficha de entrada, fotos obrigatórias, inspeção e quadro de atendimento.','Depois de concluída, a OS não pode mais ser alterada: integridade dos dados.'],
 's-ins':['Checklist por sistema do carro: motor, frenagem, suspensão, elétrico, transmissão, pneus, carroceria, interior e personalizada.','Cada item: OK, Atenção, Crítico ou N/A. O encerramento tem assinatura e gera o PDF.'],
 's-mod':['Dez módulos integrados.','Cliente se liga a veículo, agendamento e OS; a OS alimenta o painel e o financeiro. (passe o mouse na lista)'],
-'s-cli':['O dono do carro também tem o app: é um PWA, instala sem loja.','As telas mostram o visual novo, que ainda está em revisão; as funções de orçamento e convite de oficina já estão no código principal.','Aprova ou recusa orçamento, agenda em 4 passos, acompanha manutenções e o histórico.','Prioridade do projeto: aumentar a confiança do cliente.'],
+'s-cli':['O dono do carro também tem o app: é um PWA, instala sem loja.','Vê o orçamento item por item e aprova ou recusa; agenda em 4 passos; acompanha a saúde do carro. Até pelo link, sem instalar.','Prioridade do projeto: aumentar a confiança do cliente.'],
 's-cmp':['Arraste a alça ao vivo: antes, papel e mensagem solta; depois, a oficina num lugar só.'],
 's-arch':['Três camadas: React com Vite e TypeScript; API em Django REST; PostgreSQL no Supabase; publicado no Render a partir do GitHub.','Acesso por papel (RBAC), login separado de dono e funcionário, LGPD e escapeHtml() no PDF.'],
 's-qa':['28 casos de teste executados, todos aprovados, de 39 planejados.','3 problemas achados em testes exploratórios, 2 já corrigidos. Trabalhamos com Scrum.'],
