@@ -169,11 +169,11 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 
 /* ═════════ 01 · NOME — A promessa ═════════ */
 .s-name{background:#0D0D0D}
-.s-name .ghost{position:absolute;left:-30px;top:80px;font-weight:900;font-size:440px;line-height:.8;letter-spacing:-.06em;color:transparent;-webkit-text-stroke:3px rgba(255,50,49,.55);white-space:nowrap;
+.s-name .ghost{position:absolute;left:-30px;top:40px;font-weight:900;font-size:440px;line-height:.8;letter-spacing:-.06em;color:transparent;-webkit-text-stroke:3px rgba(255,50,49,.55);white-space:nowrap;
   transform:translateX(calc(var(--mx,0) * -30px));transition:transform .9s var(--out)}
 .s-name .ghost span{display:inline-block;animation:drift 26s linear infinite}
 @keyframes drift{from{transform:translateX(0)}to{transform:translateX(-25%)}}
-.s-name .kickw{position:absolute;left:120px;top:150px}
+.s-name .kickw{position:absolute;left:120px;top:395px}
 .s-name .word{position:absolute;left:120px;top:440px;font-weight:900;font-size:250px;line-height:.85;letter-spacing:-.06em;color:#fff;display:flex;align-items:flex-end}
 .s-name .word .nn{display:inline-block;max-width:0;overflow:hidden;vertical-align:bottom;color:var(--coral);transform:translateY(-120%);transition:max-width .9s var(--out),transform .9s cubic-bezier(.2,1.5,.4,1)}
 .s-name.s1 .word .nn{max-width:.62em;transform:none}
@@ -194,7 +194,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .pill{position:absolute;display:grid;gap:4px;max-width:420px}
 .pill b{font-size:40px;font-weight:800;letter-spacing:-.025em;line-height:1.02}
 .pill span{font:500 20px var(--mono);color:var(--coral);letter-spacing:.08em}
-.s-pod .facts{position:absolute;left:120px;bottom:200px;width:700px;font-size:30px;line-height:1.42;color:var(--soft)}
+.s-pod .facts{position:absolute;left:120px;bottom:170px;width:460px;font-size:30px;line-height:1.42;color:var(--soft)}
 
 /* ═════════ 03 · CORES ═════════ */
 .s-col .tri{position:absolute;inset:0;display:flex}
@@ -214,7 +214,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .s-two .l,.s-two .r{position:absolute;inset:0}
 .s-two .l{background:var(--ink);clip-path:polygon(0 0,58% 0,42% 100%,0 100%)}
 .s-two .r{background:#F6F4F3;color:var(--ink);clip-path:polygon(58% 0,100% 0,100% 100%,42% 100%)}
-.s-two .lv{position:absolute;left:120px;top:300px;width:640px}
+.s-two .lv{position:absolute;left:120px;top:330px;width:760px}
 .s-two .rv2{position:absolute;right:150px;top:230px;width:480px}
 .s-two .cap{position:absolute;display:grid;gap:14px}
 .s-two .cap .h3{font-size:46px}
@@ -367,20 +367,25 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .s-mod .desc{position:absolute;left:860px;top:845px;width:940px;font-size:30px;line-height:1.35;font-weight:500}
 
 /* ═════════ 15 · APP DO CLIENTE ═════════ */
-.s-cli .head{position:absolute;left:120px;top:140px;width:760px;display:grid;gap:24px}
-.s-cli .feats{position:absolute;left:120px;top:520px;width:740px;display:grid;gap:18px}
-.s-cli .feats div{display:grid;grid-template-columns:310px 1fr;gap:20px;border-top:2px solid var(--line);padding-top:14px}
+.s-cli .glowbg{position:absolute;right:-200px;top:40px;width:1300px;height:1300px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.28),rgba(255,255,255,0) 62%);pointer-events:none}
+.s-cli .head{position:absolute;left:120px;top:150px;width:720px;display:grid;gap:22px}
+.s-cli .head .lede{font-size:30px;max-width:22em}
+.s-cli .feats{position:absolute;left:120px;top:520px;width:660px;display:grid;gap:0}
+.s-cli .feats div{display:grid;gap:4px;border-top:2px solid rgba(255,255,255,.4);padding:14px 0}
 .s-cli .feats b{font-size:32px;font-weight:850;letter-spacing:-.02em}
-.s-cli .feats span{font-size:25px;line-height:1.35;color:var(--soft)}
-.s-cli .phones{position:absolute;left:960px;top:96px;width:840px;height:760px}
-.s-cli .phone.a{left:10px;top:90px;width:300px;transform:rotate(-8deg) scale(.86)}
-.s-cli .phone.b{left:270px;top:0;z-index:2;width:300px}
-.s-cli .phone.c{left:530px;top:90px;width:300px;transform:rotate(8deg) scale(.86)}
-.s-cli .wip{justify-self:start;font:500 20px var(--mono);letter-spacing:.06em;background:#0D0D0D;color:#fff;padding:10px 16px;border-radius:99px;display:flex;gap:10px;align-items:center}
-.s-cli .wip::before{content:"";width:10px;height:10px;border-radius:50%;background:#E8A317}
-.s-cli .tabs{position:absolute;left:960px;width:840px;bottom:130px;display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
-.s-cli .tabs button{font:600 22px var(--sans);padding:12px 22px;border-radius:99px;box-shadow:inset 0 0 0 2px rgba(255,255,255,.55);transition:all .3s}
-.s-cli .tabs button.act{background:#fff;color:var(--coral);box-shadow:none}
+.s-cli .feats span{font-size:24px;line-height:1.3;color:#fff}
+.s-cli .stagep{position:absolute;left:880px;top:96px;width:760px;height:880px;perspective:2000px}
+.s-cli .phone{width:360px;border-radius:58px;padding:12px;background:#0b0b0b;box-shadow:0 70px 120px -40px rgba(80,0,0,.75),0 0 0 2px #2a2a2a,inset 0 0 0 2px #333}
+.s-cli .phone::before{width:104px;height:30px;top:22px}
+.s-cli .phone .s{border-radius:47px;background:#fff}
+.s-cli .phone .s img{object-fit:cover;object-position:top;padding-top:38px;background:#fff}
+.s-cli .phone.b{left:200px;top:20px;z-index:3}
+.s-cli .phone.a{left:0;top:110px;z-index:1;transform:rotateY(18deg) rotateZ(-4deg) scale(.82);transform-origin:right center;filter:brightness(.92)}
+.s-cli .phone.c{left:400px;top:110px;z-index:2;transform:rotateY(-18deg) rotateZ(4deg) scale(.82);transform-origin:left center;filter:brightness(.92)}
+.s-cli .tabs{position:absolute;left:1660px;top:250px;width:160px;display:grid;gap:12px}
+.s-cli .tabs .tl{font:500 18px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.85);margin-bottom:4px}
+.s-cli .tabs button{font:700 22px var(--sans);text-align:left;padding:12px 18px;border-radius:14px;box-shadow:inset 0 0 0 2px rgba(255,255,255,.55);transition:all .3s}
+.s-cli .tabs button.act{background:#fff;color:var(--coral);box-shadow:0 10px 24px -10px rgba(0,0,0,.4)}
 
 /* ═════════ 16 · ANTES × DEPOIS ═════════ */
 .cmp{position:absolute;inset:0;--p:50;cursor:ew-resize;touch-action:none}
@@ -467,8 +472,8 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 /* ═════════ 21 · INSTAGRAM ═════════ */
 .s-ig{background:#F2F2F2}
 .s-ig .head{position:absolute;left:120px;top:140px;width:760px;display:grid;gap:20px}
-.s-ig .posts{position:absolute;left:880px;top:110px;width:600px;height:860px}
-.s-ig .posts img{position:absolute;width:400px;box-shadow:0 30px 60px -24px rgba(0,0,0,.55);transition:transform .7s var(--out)}
+.s-ig .posts{position:absolute;left:830px;top:130px;width:600px;height:860px}
+.s-ig .posts img{position:absolute;width:380px;box-shadow:0 30px 60px -24px rgba(0,0,0,.55);transition:transform .7s var(--out)}
 .s-ig .posts img:nth-child(1){left:0;top:40px;transform:rotate(-10deg)}
 .s-ig .posts img:nth-child(2){left:120px;top:0;transform:rotate(-2deg)}
 .s-ig .posts img:nth-child(3){left:220px;top:90px;transform:rotate(7deg)}
@@ -510,8 +515,8 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .s-fin .faces{position:absolute;left:0;right:0;top:700px;display:flex;justify-content:center;gap:22px}
 .s-fin .faces img{width:130px;height:130px;border-radius:50%;box-shadow:0 0 0 4px rgba(255,255,255,.25);opacity:0;transform:translateY(30px);transition:all .8s var(--out)}
 .on.s-fin .faces img{opacity:1;transform:none;transition-delay:calc(var(--i) * 80ms + 700ms)}
-.s-fin .names{position:absolute;left:0;right:0;top:870px;text-align:center;font:500 22px var(--mono);color:rgba(242,242,242,.85);padding:0 200px;line-height:1.5}
-.s-fin .links{position:absolute;left:0;right:0;bottom:120px;display:flex;justify-content:center;gap:50px;font:500 22px var(--mono)}
+.s-fin .names{position:absolute;left:0;right:0;top:850px;text-align:center;font:500 21px var(--mono);color:rgba(242,242,242,.85);padding:0 260px;line-height:1.55;text-wrap:balance}
+.s-fin .links{position:absolute;left:0;right:0;bottom:118px;display:flex;justify-content:center;gap:50px;font:500 22px var(--mono)}
 .s-fin .links a{color:#fff;text-decoration:none;border-bottom:2px solid var(--coral)}
 
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;transition-delay:0s!important}}
@@ -591,7 +596,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 </section>
 
 <!-- 06 ORIGEM -->
-<section class="scene s-orig" data-title="De onde veio" data-chap="O problema" data-steps="3">
+<section class="scene light s-orig" data-title="De onde veio" data-chap="O problema" data-steps="3">
   <div class="head"><p class="kick rv">Problema identificado</p><h2 class="h1" style="margin-top:20px;color:var(--ink)"><span class="ln"><span>Não foi teoria.</span></span><span class="ln"><span class="c" style="--d:100">Foi vivido.</span></span></h2></div>
   <div class="stampx rv" style="--d:500">Insatisfação:<br>custos · limitações<br>produtividade</div>
   <div class="card paper" data-at="1" style="left:120px;top:520px;transform:rotate(-2deg)"><span class="tape" style="left:180px;top:-18px"></span><span class="tg">Vivência prática</span><b>SENAI</b><p>Integrantes do grupo viveram a rotina de mecânica automotiva e viram o papel e a planilha no comando.</p></div>
@@ -711,19 +716,21 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 
 <!-- 15 APP DO CLIENTE -->
 <section class="scene red s-cli" data-title="App do cliente" data-chap="RevisaCar">
-  <div class="head"><p class="kick rv">App do cliente · PWA</p><h2 class="h2"><span class="ln"><span>E o dono do carro</span></span><span class="ln"><span style="--d:100;color:var(--ink)">acompanha tudo.</span></span></h2><p class="lede rv" style="--d:300">Abre no navegador e instala no celular, sem loja de aplicativos.</p></div>
+  <div class="glowbg"></div>
+  <div class="head"><p class="kick rv">App do cliente · PWA</p><h2 class="h2"><span class="ln"><span>E o dono do carro</span></span><span class="ln"><span style="--d:100;color:var(--ink)">acompanha tudo.</span></span></h2><p class="lede rv" style="--d:300;color:#fff">Abre no navegador e instala no celular, sem loja de aplicativos.</p></div>
   <div class="feats rv" style="--d:450">
     <div><b>Orçamentos</b><span>vê item por item e aprova ou recusa</span></div>
     <div><b>Agendamento</b><span>serviço, dia e horário em 4 passos</span></div>
     <div><b>Saúde do carro</b><span>o que está crítico, em atenção ou ok</span></div>
-    <div><b>Link do orçamento</b><span>aprova mesmo sem instalar o app</span></div>
+    <div><b>Link do orçamento</b><span>aprova sem instalar o app</span></div>
   </div>
-  <div class="phones">
-    <div class="phone a rv" style="--d:300"><div class="s"><img src="img/fc06.webp" alt="Meu veículo e saúde do carro"></div></div>
+  <div class="stagep">
+    <div class="phone a rv" style="--d:350"><div class="s"><img src="img/fc06.webp" alt="Meu veículo e saúde do carro"></div></div>
     <div class="phone b rv" style="--d:200"><div class="s"><img id="cliImg" src="img/fc01.webp" alt="Tela inicial do app do cliente"></div></div>
-    <div class="phone c rv" style="--d:400"><div class="s"><img src="img/fc04.webp" alt="Orçamento"></div></div>
+    <div class="phone c rv" style="--d:450"><div class="s"><img src="img/fc04.webp" alt="Orçamento"></div></div>
   </div>
   <div class="tabs rv" style="--d:600" id="cliTabs">
+    <span class="tl">Telas</span>
     <button class="act" data-i="fc01">Início</button><button data-i="fc04">Orçamento</button><button data-i="fc03">Serviços</button><button data-i="fc05">Agendar</button><button data-i="fc06">Veículo</button><button data-i="fc08">Avisos</button><button data-i="fc09">Pelo link</button>
   </div>
 </section>
@@ -832,7 +839,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   <img class="lock rv" src="img/logo-full-light.webp" alt="Verenna Digital">
   <h2 class="thx glow"><span class="ln"><span style="--d:400">Obrigado.</span></span></h2>
   <div class="faces" id="finFaces"></div>
-  <p class="names rv" style="--d:1200">Carlos Eduardo · Cauã Dias · Guilherme Barros · Henrique Jardim · João Victor · Lucas Bertoli · Pablo Leoni · Ygor de Araújo</p>
+  <p class="names rv" style="--d:1200">Carlos Eduardo · Cauã Dias · Guilherme Barros · Henrique Jardim<br>João Victor · Lucas Bertoli · Pablo Leoni · Ygor de Araújo</p>
   <div class="links rv" style="--d:1400"><a href="https://revisacarapp.com" target="_blank" rel="noopener">revisacarapp.com</a><a href="https://www.instagram.com/verenna.digital/" target="_blank" rel="noopener">@verenna.digital</a><a href="https://www.instagram.com/oficina.3l/" target="_blank" rel="noopener">@oficina.3l</a></div>
 </section>
 
@@ -975,10 +982,10 @@ const open=scenes[0];
 open.addEventListener('click',e=>{if(e.target.closest('button'))return;const r=stage.getBoundingClientRect(),k=r.width/1920;const p=document.createElement('i');p.className='pingx';p.style.left=((e.clientX-r.left)/k)+'px';p.style.top=((e.clientY-r.top)/k)+'px';open.appendChild(p);setTimeout(()=>p.remove(),1500);liqI=1.55;setTimeout(()=>liqI=1.22,420)});
 
 /* ── 02 pod ── */
-const P=[['Inteligência','aplicada à tecnologia',[1500,250],'L'],['Segurança','e proteção de dados',[1560,560],'L'],['Trabalho','em equipe',[1440,860],'L'],['Estratégia','e inovação',[860,800],'R'],['Lealdade','e parcerias sólidas',[880,470],'R']];
+const P=[['Inteligência','aplicada à tecnologia',[1480,250],'L'],['Segurança','e proteção de dados',[1520,560],'L'],['Trabalho','em equipe',[1420,840],'L'],['Estratégia','e inovação',[640,790],'R'],['Lealdade','e parcerias sólidas',[640,420],'R']];
 const pills=document.getElementById('pills'),pl=document.getElementById('podLines');const C=[1230,500];
-P.forEach(([a,b,[x,y],side],i)=>{const d=document.createElement('div');d.className='pill';d.dataset.at=i+1;d.style.cssText=`left:${x}px;top:${y}px`;d.innerHTML=`<span>0${i+1}</span><b>${a} ${b}</b>`;pills.appendChild(d);
-  const tx=side==='L'?x-20:x+300,ty=y+40;const cx=(C[0]+tx)/2+(i%2?-120:120),cy=(C[1]+ty)/2+(i%2?90:-90);
+P.forEach(([a,b,[x,y],side],i)=>{const d=document.createElement('div');d.className='pill';d.dataset.at=i+1;d.style.cssText=`left:${x}px;top:${y}px;width:320px;${side==='R'?'text-align:right;justify-items:end;':''}`;d.innerHTML=`<span>0${i+1}</span><b>${a} ${b}</b>`;pills.appendChild(d);
+  const tx=side==='L'?x-20:x+340,ty=y+40;const cx=(C[0]+tx)/2+(i%2?-120:120),cy=(C[1]+ty)/2+(i%2?90:-90);
   const p=document.createElementNS('http://www.w3.org/2000/svg','path');p.setAttribute('d',`M${C[0]},${C[1]} Q${cx},${cy} ${tx},${ty}`);p.setAttribute('pathLength','1');p.dataset.k=i+1;pl.appendChild(p)});
 hooks['s-pod']={step(k){pl.querySelectorAll('path').forEach(p=>p.classList.toggle('in',+p.dataset.k<=k))}};
 
