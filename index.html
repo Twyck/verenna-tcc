@@ -774,11 +774,11 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 <!-- 18 QUALIDADE -->
 <section class="scene s-qa" data-title="Testes e método" data-chap="Construção">
   <div class="big glow rv num">28/28</div>
-  <p class="cap1 rv" style="--d:300">casos de teste executados, <span class="c">todos aprovados.</span></p>
+  <p class="cap1 rv" style="--d:300">casos executados, <span class="c">todos aprovados.</span><br><span style="font-size:30px;font-weight:500;color:var(--soft)">68% do plano · faltam compatibilidade, carga, acessibilidade e instalação</span></p>
   <div class="facts rv" style="--d:500">
-    <div><b class="num">39</b><span>casos planejados no plano de testes</span></div>
-    <div><b class="num">72%</b><span>do plano executado até a documentação</span></div>
-    <div><b class="num">3 → 2</b><span>problemas achados em testes exploratórios; dois já corrigidos e validados</span></div>
+    <div><b class="num">41</b><span>casos planejados, em 16 tipos de teste</span></div>
+    <div><b class="num">0</b><span>reprovações · teste de fumaça a cada publicação, sem falha bloqueante</span></div>
+    <div><b class="num">3 → 2</b><span>bugs de layout em telas secundárias; dois já corrigidos, nenhum nos fluxos críticos</span></div>
   </div>
   <div class="scrum rv" style="--d:700"><div><em>Scrum 1</em><b>Levantamento de requisitos</b></div><div><em>2</em><b>Organização das tarefas</b></div><div><em>3</em><b>Desenvolvimento</b></div><div><em>4</em><b>Testes e melhorias</b></div><div><em>5</em><b>Entrega</b></div></div>
 </section>
@@ -830,7 +830,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
     <div data-at="3"><i>✓</i><div><b>Tecnologia aplicada à gestão</b><p>React, Django REST e PostgreSQL, com RBAC e cuidado com a LGPD.</p></div></div>
     <div data-at="4"><i>✓</i><div><b>Base para crescer</b><p>no ar em domínio próprio, pronto para outras oficinas.</p></div></div>
   </div>
-  <div class="next rv" style="--d:400"><span class="tag" style="color:#fff">Próximos passos</span><ul><li>Acompanhar o uso diário na Oficina 3L</li><li>Levar o RevisaCar a outras oficinas</li><li>Concluir os 11 casos de teste restantes</li></ul></div>
+  <div class="next rv" style="--d:400"><span class="tag" style="color:#fff">Próximos passos</span><ul><li>Acompanhar o uso diário na Oficina 3L</li><li>Levar o RevisaCar a outras oficinas</li><li>Executar os 13 casos de teste pendentes</li></ul></div>
 </section>
 
 <!-- 23 FIM -->
@@ -1111,11 +1111,11 @@ const NOTES={
 's-cli':['O dono do carro também tem o app: é um PWA, instala sem loja.','Vê o orçamento item por item e aprova ou recusa; agenda em 4 passos; acompanha a saúde do carro. Até pelo link, sem instalar.','Prioridade do projeto: aumentar a confiança do cliente.'],
 's-cmp':['Arraste a alça ao vivo: antes, papel e mensagem solta; depois, a oficina num lugar só.'],
 's-arch':['Três camadas: React com Vite e TypeScript; API em Django REST; PostgreSQL no Supabase; publicado no Render a partir do GitHub.','Acesso por papel (RBAC), login separado de dono e funcionário, LGPD e escapeHtml() no PDF.'],
-'s-qa':['28 casos de teste executados, todos aprovados, de 39 planejados.','3 problemas achados em testes exploratórios, 2 já corrigidos. Trabalhamos com Scrum.'],
+'s-qa':['Plano de testes com 41 casos em 16 tipos de teste. 28 executados, todos aprovados, nenhuma reprovação.','Faltam 13: compatibilidade, carga, acessibilidade e instalação.','3 bugs de layout em telas secundárias, 2 já corrigidos. Teste de fumaça a cada publicação desde junho, sem falha bloqueante. Trabalhamos com Scrum.'],
 's-tl':['Fevereiro a novembro de 2026. (→ a orca nada a linha do tempo)','Fundação, pesquisa, requisitos, protótipos, telas, QA, correções, homologação, monitoramento e a defesa hoje.'],
 's-team':['Oito pessoas em cinco frentes, com orientação da Prof.ª Pamela Andrelo. Cada um se apresenta pela sua frente.','Clique nas frentes para destacar quem fez o quê.'],
 's-ig':['A Verenna também se comunica: @verenna.digital.','Em 30 dias: 1.940 visualizações, 679 contas alcançadas, 75 seguidores. O post mais visto teve 825 visualizações.'],
-'s-end':['Um problema real, confirmado com 53 estabelecimentos.','Uma solução prática, com tecnologia aplicada à gestão e base para crescer.','Próximos passos: uso diário na Oficina 3L, novas oficinas e terminar o plano de testes.'],
+'s-end':['Um problema real, confirmado com 53 estabelecimentos.','Uma solução prática, com tecnologia aplicada à gestão e base para crescer.','Próximos passos: uso diário na Oficina 3L, novas oficinas e executar os 13 casos de teste pendentes.'],
 's-fin':['Obrigado. Abrir para perguntas.','Se pedirem demo: revisacarapp.com.']
 };
 const thumb=i=>new URL('thumbs/s'+String(i).padStart(2,'0')+'.jpg',location.href).href;
