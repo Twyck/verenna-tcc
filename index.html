@@ -308,6 +308,10 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .s-rev .stagewin{position:absolute;left:50%;top:600px;width:1160px;margin-left:-580px;perspective:2200px}
 .s-rev .stagewin .win{position:relative;transform:rotateX(58deg) translateY(220px) scale(.9);transform-origin:50% 0;transition:transform 1.8s var(--out);box-shadow:0 0 0 2px rgba(255,255,255,.15),0 -30px 120px -20px rgba(255,50,49,.5)}
 .s-rev.s1 .stagewin .win{transform:rotateX(16deg) translateY(-40px)}
+.s-rev .demoqr{position:absolute;left:110px;bottom:150px;width:236px;background:#fff;color:#0D0D0D;border-radius:22px;padding:16px;display:grid;gap:8px;justify-items:center;text-align:center;z-index:4;box-shadow:0 30px 60px -20px rgba(0,0,0,.7)}
+.s-rev .demoqr img{width:200px;height:200px}
+.s-rev .demoqr b{font-size:24px;font-weight:850;letter-spacing:-.02em}
+.s-rev .demoqr span{font:500 17px var(--mono);color:#4a4242}
 .s-rev .live{position:absolute;right:120px;top:140px;display:flex;gap:14px;align-items:center;font:500 22px var(--mono);background:#000;padding:14px 22px;border-radius:99px;box-shadow:0 0 0 2px rgba(255,255,255,.2)}
 .s-rev .live i{width:13px;height:13px;border-radius:50%;background:#2FD36F;animation:blink 1.6s infinite}
 @keyframes blink{50%{opacity:.3}}
@@ -372,6 +376,8 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .s-cli .phone.a{left:10px;top:90px;width:300px;transform:rotate(-8deg) scale(.86)}
 .s-cli .phone.b{left:270px;top:0;z-index:2;width:300px}
 .s-cli .phone.c{left:530px;top:90px;width:300px;transform:rotate(8deg) scale(.86)}
+.s-cli .wip{justify-self:start;font:500 20px var(--mono);letter-spacing:.06em;background:#0D0D0D;color:#fff;padding:10px 16px;border-radius:99px;display:flex;gap:10px;align-items:center}
+.s-cli .wip::before{content:"";width:10px;height:10px;border-radius:50%;background:#E8A317}
 .s-cli .tabs{position:absolute;left:960px;width:840px;bottom:130px;display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
 .s-cli .tabs button{font:600 22px var(--sans);padding:12px 22px;border-radius:99px;box-shadow:inset 0 0 0 2px rgba(255,255,255,.55);transition:all .3s}
 .s-cli .tabs button.act{background:#fff;color:var(--coral);box-shadow:none}
@@ -649,6 +655,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   <h2 class="word glow"><span class="ln"><span style="--d:300">RevisaCar</span></span></h2>
   <p class="fy rv" style="--d:700">For you</p>
   <div class="stagewin"><div class="win"><div class="bar"><i></i><i></i><i></i><span>revisacarapp.com</span></div><div class="scr"><img src="img/v2-hoje.webp" alt="Tela Hoje do RevisaCar"></div></div></div>
+  <div class="demoqr" data-at="1"><img src="img/qr-revisacar.png" alt="QR code para revisacarapp.com"><b>Teste agora</b><span>revisacarapp.com</span></div>
 </section>
 
 <!-- 11 ANATOMIA -->
@@ -704,12 +711,12 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 
 <!-- 15 APP DO CLIENTE -->
 <section class="scene red s-cli" data-title="App do cliente" data-chap="RevisaCar">
-  <div class="head"><p class="kick rv">App do cliente · PWA</p><h2 class="h2"><span class="ln"><span>E o dono do carro</span></span><span class="ln"><span style="--d:100;color:var(--ink)">acompanha tudo.</span></span></h2><p class="lede rv" style="--d:300">Abre no navegador e instala no celular, sem loja de aplicativos.</p></div>
+  <div class="head"><p class="kick rv">App do cliente · PWA</p><h2 class="h2"><span class="ln"><span>E o dono do carro</span></span><span class="ln"><span style="--d:100;color:var(--ink)">acompanha tudo.</span></span></h2><p class="lede rv" style="--d:300">Abre no navegador e instala no celular, sem loja de aplicativos.</p><span class="wip rv" style="--d:400">Visual novo em revisão, antes de ir ao ar</span></div>
   <div class="feats rv" style="--d:450">
     <div><b>Orçamentos</b><span>aprova ou recusa, com comentário</span></div>
     <div><b>Agendamento</b><span>serviço, data e horário em 4 passos</span></div>
     <div><b>Saúde do carro</b><span>manutenções e lembretes por quilometragem</span></div>
-    <div><b>Garantia digital</b><span>histórico de cada serviço feito</span></div>
+    <div><b>Histórico</b><span>serviços feitos, com busca e detalhe</span></div>
   </div>
   <div class="phones">
     <div class="phone a rv" style="--d:300"><div class="s"><img src="img/cli-saude.webp" alt="Saúde do veículo"></div></div>
@@ -1095,7 +1102,7 @@ const NOTES={
 's-os':['O caminho de uma OS em 5 passos: abrir, ficha de entrada, fotos obrigatórias, inspeção e quadro de atendimento.','Depois de concluída, a OS não pode mais ser alterada: integridade dos dados.'],
 's-ins':['Checklist por sistema do carro: motor, frenagem, suspensão, elétrico, transmissão, pneus, carroceria, interior e personalizada.','Cada item: OK, Atenção, Crítico ou N/A. O encerramento tem assinatura e gera o PDF.'],
 's-mod':['Dez módulos integrados.','Cliente se liga a veículo, agendamento e OS; a OS alimenta o painel e o financeiro. (passe o mouse na lista)'],
-'s-cli':['O dono do carro também tem o app: é um PWA, instala sem loja.','Aprova ou recusa orçamento, agenda, acompanha a saúde do carro e a garantia.','Prioridade do projeto: aumentar a confiança do cliente.'],
+'s-cli':['O dono do carro também tem o app: é um PWA, instala sem loja.','As telas mostram o visual novo, que ainda está em revisão; as funções de orçamento e convite de oficina já estão no código principal.','Aprova ou recusa orçamento, agenda em 4 passos, acompanha manutenções e o histórico.','Prioridade do projeto: aumentar a confiança do cliente.'],
 's-cmp':['Arraste a alça ao vivo: antes, papel e mensagem solta; depois, a oficina num lugar só.'],
 's-arch':['Três camadas: React com Vite e TypeScript; API em Django REST; PostgreSQL no Supabase; publicado no Render a partir do GitHub.','Acesso por papel (RBAC), login separado de dono e funcionário, LGPD e escapeHtml() no PDF.'],
 's-qa':['28 casos de teste executados, todos aprovados, de 39 planejados.','3 problemas achados em testes exploratórios, 2 já corrigidos. Trabalhamos com Scrum.'],
