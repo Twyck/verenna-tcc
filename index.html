@@ -456,17 +456,17 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 
 /* ═════════ 20 · EQUIPE ═════════ */
 .s-team .head{position:absolute;left:120px;top:140px;width:900px;display:grid;gap:20px}
-.s-team .faces{position:absolute;left:1000px;top:140px;width:820px;height:440px}
-.s-team .faces img{position:absolute;width:190px;height:190px;border-radius:50%;box-shadow:0 0 0 5px var(--ink),0 0 0 8px rgba(255,50,49,.75);transition:transform .6s var(--out)}
-.s-team .faces img:hover{transform:scale(1.12)}
-.s-team .areas{position:absolute;left:120px;top:420px;display:flex;flex-wrap:wrap;gap:12px;width:820px}
+.s-team .areas{position:absolute;right:120px;top:190px;display:flex;flex-wrap:wrap;gap:12px;width:760px;justify-content:flex-end}
 .s-team .areas button{font:700 24px var(--sans);padding:12px 22px;border-radius:99px;box-shadow:inset 0 0 0 2px rgba(242,242,242,.4);transition:all .3s}
 .s-team .areas button.act{background:var(--coral);box-shadow:none}
-.s-team .names{position:absolute;left:120px;right:120px;top:640px;display:grid;grid-template-columns:repeat(4,1fr);gap:0 40px}
-.s-team .p{border-top:3px solid rgba(242,242,242,.22);padding:16px 0 20px;transition:opacity .35s,border-color .35s}
-.s-team .p b{display:block;font-size:38px;font-weight:850;letter-spacing:-.025em}
-.s-team .p span{font-size:22px;color:var(--soft)}
-.s-team .names.f .p{opacity:.2}.s-team .names.f .p.hit{opacity:1;border-color:var(--coral)}
+.s-team .grid{position:absolute;left:120px;right:120px;top:420px;display:grid;grid-template-columns:repeat(4,1fr);gap:26px 34px}
+.s-team .p{display:grid;grid-template-columns:128px 1fr;gap:20px;align-items:center;padding:16px 0;border-top:3px solid rgba(242,242,242,.2);transition:opacity .35s,border-color .35s}
+.s-team .p img{width:128px;height:128px;border-radius:50%;box-shadow:0 0 0 4px var(--ink),0 0 0 7px rgba(255,50,49,.7);transition:transform .5s var(--out)}
+.s-team .p:hover img{transform:scale(1.08)}
+.s-team .p b{display:block;font-size:32px;font-weight:850;letter-spacing:-.02em;line-height:1.05}
+.s-team .p span{font-size:21px;line-height:1.3;color:var(--soft)}
+.s-team .grid.f .p{opacity:.22}
+.s-team .grid.f .p.hit{opacity:1;border-color:var(--coral)}
 .s-team .ori{position:absolute;left:120px;bottom:150px;font:500 22px var(--mono);color:var(--soft)}
 
 /* ═════════ 21 · INSTAGRAM ═════════ */
@@ -512,9 +512,11 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .s-fin .veil{position:absolute;inset:0;background:radial-gradient(ellipse 60% 55% at 50% 45%,rgba(13,13,13,.2),rgba(13,13,13,.9) 78%)}
 .s-fin .lock{position:absolute;left:50%;top:170px;width:820px;margin-left:-410px}
 .s-fin .thx{position:absolute;left:0;right:0;top:420px;text-align:center;font-weight:900;font-size:250px;letter-spacing:-.065em;line-height:.8}
-.s-fin .faces{position:absolute;left:0;right:0;top:700px;display:flex;justify-content:center;gap:22px}
-.s-fin .faces img{width:130px;height:130px;border-radius:50%;box-shadow:0 0 0 4px rgba(255,255,255,.25);opacity:0;transform:translateY(30px);transition:all .8s var(--out)}
-.on.s-fin .faces img{opacity:1;transform:none;transition-delay:calc(var(--i) * 80ms + 700ms)}
+.s-fin .faces{position:absolute;left:0;right:0;top:690px;display:flex;justify-content:center;gap:8px}
+.s-fin .faces figure{width:170px;display:grid;justify-items:center;gap:10px;opacity:0;transform:translateY(30px);transition:all .8s var(--out)}
+.on.s-fin .faces figure{opacity:1;transform:none;transition-delay:calc(var(--i) * 80ms + 700ms)}
+.s-fin .faces img{width:130px;height:130px;border-radius:50%;box-shadow:0 0 0 4px rgba(255,255,255,.25)}
+.s-fin .faces figcaption{font:600 20px/1.2 var(--sans);text-align:center;color:#fff}
 .s-fin .names{position:absolute;left:0;right:0;top:850px;text-align:center;font:500 21px var(--mono);color:rgba(242,242,242,.85);padding:0 260px;line-height:1.55;text-wrap:balance}
 .s-fin .links{position:absolute;left:0;right:0;bottom:118px;display:flex;justify-content:center;gap:50px;font:500 22px var(--mono)}
 .s-fin .links a{color:#fff;text-decoration:none;border-bottom:2px solid var(--coral)}
@@ -792,19 +794,18 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 <!-- 20 EQUIPE -->
 <section class="scene s-team" data-title="Equipe" data-chap="Construção">
   <div class="head"><p class="kick rv">Organograma</p><h2 class="h2"><span class="ln"><span>Oito pessoas,</span></span><span class="ln"><span class="c" style="--d:100">um grupo só.</span></span></h2></div>
-  <div class="faces rv" style="--d:200" id="faces"></div>
-  <div class="areas rv" style="--d:400" id="areas"><button class="act" data-a="">Todos</button><button data-a="gp">Gestão do produto</button><button data-a="dev">Desenvolvimento</button><button data-a="db">Banco de dados</button><button data-a="ux">Design e marketing</button><button data-a="qa">Testes e documentação</button></div>
-  <p class="ori rv" style="--d:500">Orientação · <span style="color:var(--fg)">Prof.ª Pamela Andrelo</span></p>
-  <div class="names rv" style="--d:600" id="names">
-    <div class="p" data-a="gp dev"><b>João Victor</b><span>produto · front e back</span></div>
-    <div class="p" data-a="gp dev"><b>Guilherme Barros</b><span>produto · front e back</span></div>
-    <div class="p" data-a="db dev"><b>Ygor de Araújo</b><span>liderança técnica · banco</span></div>
-    <div class="p" data-a="db dev"><b>Pablo Leoni</b><span>liderança técnica · banco</span></div>
-    <div class="p" data-a="ux"><b>Henrique Jardim</b><span>UX/UI · marketing</span></div>
-    <div class="p" data-a="ux"><b>Lucas Bertoli</b><span>UX/UI · marketing</span></div>
-    <div class="p" data-a="qa"><b>Carlos Eduardo</b><span>QA · documentação</span></div>
-    <div class="p" data-a="qa"><b>Cauã Dias</b><span>QA · documentação</span></div>
+  <div class="areas rv" style="--d:300" id="areas"><button class="act" data-a="">Todos</button><button data-a="gp">Gestão do produto</button><button data-a="dev">Desenvolvimento</button><button data-a="db">Banco de dados</button><button data-a="ux">Design e marketing</button><button data-a="qa">Testes e documentação</button></div>
+  <div class="grid rv" style="--d:450" id="names">
+    <div class="p" data-a="gp dev"><img src="img/team2.webp" alt="João Victor"><div><b>João Victor</b><span>produto · front e back</span></div></div>
+    <div class="p" data-a="gp dev"><img src="img/team4.webp" alt="Guilherme Barros"><div><b>Guilherme Barros</b><span>produto · front e back</span></div></div>
+    <div class="p" data-a="db dev"><img src="img/team6.webp" alt="Ygor de Araújo"><div><b>Ygor de Araújo</b><span>líder técnico · banco</span></div></div>
+    <div class="p" data-a="db dev"><img src="img/team5.webp" alt="Pablo Leoni"><div><b>Pablo Leoni</b><span>líder técnico · banco</span></div></div>
+    <div class="p" data-a="ux"><img src="img/team3.webp" alt="Henrique Jardim"><div><b>Henrique Jardim</b><span>UX/UI · marketing</span></div></div>
+    <div class="p" data-a="ux"><img src="img/team7.webp" alt="Lucas Bertoli"><div><b>Lucas Bertoli</b><span>UX/UI · marketing</span></div></div>
+    <div class="p" data-a="qa"><img src="img/team0.webp" alt="Carlos Eduardo"><div><b>Carlos Eduardo</b><span>QA · documentação</span></div></div>
+    <div class="p" data-a="qa"><img src="img/team1.webp" alt="Cauã Dias"><div><b>Cauã Dias</b><span>QA · documentação</span></div></div>
   </div>
+  <p class="ori rv" style="--d:600">Orientação · <span style="color:var(--fg)">Prof.ª Pamela Andrelo</span></p>
 </section>
 
 <!-- 21 INSTAGRAM -->
@@ -839,8 +840,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   <img class="lock rv" src="img/logo-full-light.webp" alt="Verenna Digital">
   <h2 class="thx glow"><span class="ln"><span style="--d:400">Obrigado.</span></span></h2>
   <div class="faces" id="finFaces"></div>
-  <p class="names rv" style="--d:1200">Carlos Eduardo · Cauã Dias · Guilherme Barros · Henrique Jardim<br>João Victor · Lucas Bertoli · Pablo Leoni · Ygor de Araújo</p>
-  <div class="links rv" style="--d:1400"><a href="https://revisacarapp.com" target="_blank" rel="noopener">revisacarapp.com</a><a href="https://www.instagram.com/verenna.digital/" target="_blank" rel="noopener">@verenna.digital</a><a href="https://www.instagram.com/oficina.3l/" target="_blank" rel="noopener">@oficina.3l</a></div>
+    <div class="links rv" style="--d:1400"><a href="https://revisacarapp.com" target="_blank" rel="noopener">revisacarapp.com</a><a href="https://www.instagram.com/verenna.digital/" target="_blank" rel="noopener">@verenna.digital</a><a href="https://www.instagram.com/oficina.3l/" target="_blank" rel="noopener">@oficina.3l</a></div>
 </section>
 
 <div class="tide" id="tide"><b id="tideTxt"></b></div>
@@ -1085,10 +1085,9 @@ MO.forEach(([m,t],i)=>{const [x,y]=pts[i];const el=document.createElement('div')
   el.innerHTML=i%2?`<i></i><b>${m}</b><span>${t}</span>`:`<b>${m}</b><span>${t}</span><i></i>`;months.appendChild(el)});
 
 /* ── 20 equipe ── */
-const FP=[[0,40],[200,0],[400,50],[600,10],[90,240],[300,220],[500,250],[690,230]];
-const faces=document.getElementById('faces'),fin=document.getElementById('finFaces');
-FP.forEach(([x,y],i)=>{const im=new Image();im.src=`img/team${i}.webp`;im.alt='';im.style.cssText=`left:${x}px;top:${y}px`;faces.appendChild(im);
-  const f=new Image();f.src=`img/team${i}.webp`;f.alt='';f.style.setProperty('--i',i);fin.appendChild(f)});
+const FN=['Carlos Eduardo','Cauã Dias','João Victor','Henrique Jardim','Guilherme Barros','Pablo Leoni','Ygor de Araújo','Lucas Bertoli'];
+const fin=document.getElementById('finFaces');
+FN.forEach((n,i)=>{const fg=document.createElement('figure');fg.style.setProperty('--i',i);fg.innerHTML=`<img src="img/team${i}.webp" alt="${n}"><figcaption>${n}</figcaption>`;fin.appendChild(fg)});
 const areas=[...document.querySelectorAll('#areas button')],names=document.getElementById('names');
 areas.forEach(b=>b.onclick=()=>{areas.forEach(x=>x.classList.toggle('act',x===b));const a=b.dataset.a;names.classList.toggle('f',!!a);[...names.children].forEach(p=>p.classList.toggle('hit',!!a&&p.dataset.a.split(' ').includes(a)))});
 
@@ -1114,7 +1113,7 @@ const NOTES={
 's-arch':['Três camadas: React com Vite e TypeScript; API em Django REST; PostgreSQL no Supabase; publicado no Render a partir do GitHub.','Acesso por papel (RBAC), login separado de dono e funcionário, LGPD e escapeHtml() no PDF.'],
 's-qa':['28 casos de teste executados, todos aprovados, de 39 planejados.','3 problemas achados em testes exploratórios, 2 já corrigidos. Trabalhamos com Scrum.'],
 's-tl':['Fevereiro a novembro de 2026. (→ a orca nada a linha do tempo)','Fundação, pesquisa, requisitos, protótipos, telas, QA, correções, homologação, monitoramento e a defesa hoje.'],
-'s-team':['Oito pessoas em cinco frentes, com orientação da Prof.ª Pamela Andrelo.','Clique nas frentes para destacar quem fez o quê.'],
+'s-team':['Oito pessoas em cinco frentes, com orientação da Prof.ª Pamela Andrelo. Cada um se apresenta pela sua frente.','Clique nas frentes para destacar quem fez o quê.'],
 's-ig':['A Verenna também se comunica: @verenna.digital.','Em 30 dias: 1.940 visualizações, 679 contas alcançadas, 75 seguidores. O post mais visto teve 825 visualizações.'],
 's-end':['Um problema real, confirmado com 53 estabelecimentos.','Uma solução prática, com tecnologia aplicada à gestão e base para crescer.','Próximos passos: uso diário na Oficina 3L, novas oficinas e terminar o plano de testes.'],
 's-fin':['Obrigado. Abrir para perguntas.','Se pedirem demo: revisacarapp.com.']
