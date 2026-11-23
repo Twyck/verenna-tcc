@@ -1,0 +1,1078 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Verenna Digital · TCC</title>
+<link rel="icon" href="img/orca-flat.webp">
+<link rel="stylesheet" href="fonts.css">
+<style>
+/* MARÉ — palco 1920×1080. Três registros: Superfície (líquido + brilho), Colagem (papel, retícula, carimbo), Planta (grade técnica, chamadas).
+   Identidade oficial: White Smoke #F2F2F2 · Coral Red #FF3231 · Obsidian Black #0D0D0D. Produto RevisaCar: vermelho #EB1B21, DM Sans/DM Mono. */
+:root{
+  --smoke:#F2F2F2; --coral:#FF3231; --ink:#0D0D0D; --deep:#5E0C0B; --rc:#EB1B21; --gold:#E9B518; --ok:#22A55A; --warn:#E8A317;
+  --sans:"DM Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:"DM Mono",ui-monospace,Menlo,Consolas,monospace;
+  --out:cubic-bezier(.16,1,.3,1); --io:cubic-bezier(.77,0,.18,1); --swim:cubic-bezier(.45,.05,.2,1);
+  color-scheme:dark;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{background:var(--ink);color:var(--smoke);font-family:var(--sans);overflow:hidden;-webkit-font-smoothing:antialiased;
+  padding-left:max(0px,env(safe-area-inset-left,0px));padding-right:max(0px,env(safe-area-inset-right,0px))}
+html,body,.stage,.stage *{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+img{display:block;max-width:100%;-webkit-user-drag:none}
+::selection{background:transparent}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+:focus-visible{outline:4px solid var(--coral);outline-offset:4px}
+
+.viewport{position:fixed;inset:0;overflow:hidden;background:#000}
+.stage{position:absolute;left:50%;top:50%;width:1920px;height:1080px;transform:translate(-50%,-50%) scale(var(--k,.5));overflow:hidden;background:var(--ink)}
+#liquid{position:absolute;inset:0;width:1920px;height:1080px;z-index:0;opacity:0;transition:opacity 1s ease}
+.stage.liq #liquid{opacity:1}
+
+/* cenas */
+.scene{position:absolute;inset:0;z-index:2;overflow:hidden;visibility:hidden;opacity:0;transition:opacity .5s ease,visibility 0s linear .5s;
+  --bg:var(--ink);--fg:var(--smoke);--soft:rgba(242,242,242,.78);--line:rgba(242,242,242,.22);background:var(--bg);color:var(--fg)}
+.scene.light{--bg:var(--smoke);--fg:var(--ink);--soft:rgba(13,13,13,.78);--line:rgba(13,13,13,.2)}
+.scene.red{--bg:var(--coral);--fg:#fff;--soft:rgba(255,255,255,.9);--line:rgba(255,255,255,.4)}
+.scene.liq{background:transparent}
+.scene.on{visibility:visible;opacity:1;transition:opacity .6s ease .05s,visibility 0s;animation:sin 1.1s var(--out) both}
+.scene.off{transform:translateX(calc(var(--dir,1) * -80px));transition:opacity .45s ease,transform .7s var(--out),visibility 0s linear .7s}
+@keyframes sin{from{transform:translateX(calc(var(--dir,1) * 80px))}to{transform:none}}
+
+/* tipo — mínimo 20px para projeção */
+.kick{font:500 20px/1.2 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--coral);display:flex;gap:16px;align-items:center}
+.kick::before{content:"";width:44px;height:3px;background:currentColor}
+.red .kick{color:#fff}
+.mega{font-weight:900;font-size:230px;line-height:.8;letter-spacing:-.055em}
+.h1{font-weight:850;font-size:120px;line-height:.9;letter-spacing:-.045em;text-wrap:balance}
+.h2{font-weight:800;font-size:78px;line-height:.95;letter-spacing:-.035em;text-wrap:balance}
+.h3{font-weight:750;font-size:40px;line-height:1.08;letter-spacing:-.02em}
+.lede{font-size:32px;line-height:1.38;color:var(--soft);font-weight:400;text-wrap:pretty}
+.txt{font-size:27px;line-height:1.42;color:var(--soft)}
+.lede b,.txt b{color:var(--fg);font-weight:700}
+.tag{font:500 20px var(--mono);letter-spacing:.06em;color:var(--soft)}
+.c{color:var(--coral)} .red .c{color:var(--ink)}
+.num{font-variant-numeric:tabular-nums}
+.glow{color:#fff;text-shadow:0 0 14px rgba(255,214,200,.95),0 0 46px rgba(255,110,90,.85),0 0 120px rgba(255,50,49,.75),0 0 240px rgba(255,50,49,.45)}
+.glow-r{color:#FFB3A8;text-shadow:0 0 12px rgba(255,120,100,.95),0 0 50px rgba(255,50,49,.9),0 0 150px rgba(255,50,49,.6)}
+
+/* entrada */
+.rv{opacity:0;transform:translateY(40px);transition:opacity .8s var(--out),transform 1.1s var(--out)}
+.on .rv{opacity:1;transform:none;transition-delay:calc(var(--d,0) * 1ms + 250ms)}
+.ln{display:block;overflow:hidden;padding-bottom:.08em;margin-bottom:-.08em}
+.ln>span{display:block;transform:translateY(110%);transition:transform 1.15s var(--out)}
+.on .ln>span{transform:none;transition-delay:calc(var(--d,0) * 1ms + 150ms)}
+[data-at]{opacity:0;transform:translateY(30px);transition:opacity .6s var(--out),transform .9s var(--out)}
+[data-at].in{opacity:1;transform:none}
+
+/* sonar */
+.sonar{position:absolute;width:var(--s,1000px);aspect-ratio:1;border-radius:50%;pointer-events:none;transform:translate(-50%,-50%)}
+.sonar i{position:absolute;inset:0;border-radius:50%;border:2px solid var(--sc,rgba(255,50,49,.55));transform:scale(.12);opacity:0;animation:ping 6.4s var(--out) infinite}
+.sonar i:nth-child(2){animation-delay:1.6s}.sonar i:nth-child(3){animation-delay:3.2s}.sonar i:nth-child(4){animation-delay:4.8s}
+@keyframes ping{0%{transform:scale(.12);opacity:0}10%{opacity:1}100%{transform:scale(1);opacity:0}}
+.pingx{position:absolute;width:40px;height:40px;border-radius:50%;border:3px solid #fff;transform:translate(-50%,-50%) scale(.2);pointer-events:none;z-index:30;animation:pingx 1.4s var(--out) forwards}
+@keyframes pingx{to{transform:translate(-50%,-50%) scale(18);opacity:0;border-width:1px}}
+
+/* texturas */
+.grid-bp{position:absolute;inset:0;pointer-events:none;background:
+  linear-gradient(rgba(242,242,242,.07) 2px,transparent 2px) 0 0/240px 240px,
+  linear-gradient(90deg,rgba(242,242,242,.07) 2px,transparent 2px) 0 0/240px 240px,
+  linear-gradient(rgba(242,242,242,.035) 1px,transparent 1px) 0 0/48px 48px,
+  linear-gradient(90deg,rgba(242,242,242,.035) 1px,transparent 1px) 0 0/48px 48px}
+.paper{background:#EFEAE1;color:var(--ink);box-shadow:0 18px 40px -12px rgba(0,0,0,.55)}
+.tape{position:absolute;width:150px;height:44px;background:rgba(255,50,49,.82);mix-blend-mode:multiply;transform:rotate(-8deg)}
+.halftone{position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at center,rgba(13,13,13,.9) 0 1.6px,transparent 2.2px) 0 0/7px 7px;mix-blend-mode:multiply;opacity:.55}
+.duo{position:relative;overflow:hidden;background:var(--ink)}
+.duo img{width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.35) brightness(1.05);mix-blend-mode:screen;opacity:.95}
+.duo::after{content:"";position:absolute;inset:0;background:var(--coral);mix-blend-mode:multiply}
+
+/* janelas de app */
+.win{position:absolute;border-radius:16px;overflow:hidden;background:#fff;box-shadow:0 0 0 2px rgba(255,255,255,.12),0 70px 140px -50px rgba(0,0,0,.85)}
+.win .bar{height:40px;background:#ECE9E7;display:flex;align-items:center;gap:9px;padding:0 16px}
+.win .bar i{width:13px;height:13px;border-radius:50%;background:#d6d0ce}
+.win .bar i:nth-child(1){background:#FF5F57}.win .bar i:nth-child(2){background:#FEBC2E}.win .bar i:nth-child(3){background:#28C840}
+.win .bar span{margin-left:16px;font:500 16px var(--mono);color:#5a5252}
+.win .scr{position:relative;aspect-ratio:1440/900;background:#F6F4F3;overflow:hidden}
+.win .scr img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top left}
+.demo{position:absolute;right:14px;bottom:12px;z-index:3;font:500 16px var(--mono);letter-spacing:.04em;color:#4a4242;background:rgba(255,255,255,.92);padding:6px 12px;border-radius:99px;box-shadow:0 0 0 1px rgba(13,13,13,.1)}
+.phone{position:absolute;width:330px;aspect-ratio:780/1688;border-radius:54px;background:#0b0b0b;padding:11px;box-shadow:0 60px 110px -30px rgba(0,0,0,.7),inset 0 0 0 2px #333}
+.phone::before{content:"";position:absolute;left:50%;top:20px;width:100px;height:30px;border-radius:16px;background:#000;transform:translateX(-50%);z-index:3}
+.phone .s{width:100%;height:100%;border-radius:44px;overflow:hidden;position:relative;background:#F2F2F7}
+.phone .s img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top;transition:opacity .45s}
+
+/* ── HUD ── */
+.hud{position:absolute;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:0 72px;pointer-events:none;color:var(--hfg,#F2F2F2);transition:color .5s}
+.hud>*{pointer-events:auto}
+.hud-top{top:36px}.hud-bot{bottom:34px;gap:28px}
+.stage{--hfg:#F2F2F2;--hsoft:rgba(242,242,242,.7);--hline:rgba(242,242,242,.28)}
+.stage[data-tone="light"]{--hfg:#0D0D0D;--hsoft:rgba(13,13,13,.65);--hline:rgba(13,13,13,.22)}
+.stage[data-tone="red"]{--hfg:#fff;--hsoft:rgba(255,255,255,.85);--hline:rgba(255,255,255,.45)}
+.brand{height:40px;display:flex;align-items:center}
+.brand img{height:40px;width:auto}
+.brand .dk{display:none}
+.stage[data-tone="red"] .brand img{filter:brightness(0) invert(1)}
+.stage[data-tone="light"] .brand .lt{display:none}.stage[data-tone="light"] .brand .dk{display:block}
+.chap{font:500 18px var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--hsoft)}
+.count{font:800 34px var(--sans);display:flex;gap:8px;align-items:baseline;letter-spacing:-.02em}
+.count small{font:500 18px var(--mono);color:var(--hsoft)}
+.segs{display:flex;gap:6px;flex:1;max-width:880px}
+.segs button{flex:1;height:24px;display:flex;align-items:center}
+.segs button::before{content:"";width:100%;height:4px;border-radius:2px;background:var(--hline);transition:background .4s,height .3s}
+.segs button.done::before{background:var(--hfg)}
+.segs button.now::before{background:var(--coral);height:8px}
+.stage[data-tone="red"] .segs button.now::before{background:#fff}
+.ctl{display:flex;gap:12px}
+.ctl button{width:58px;height:58px;border-radius:50%;border:2px solid var(--hline);display:grid;place-items:center;transition:background .25s,border-color .25s,color .25s}
+.ctl button:hover{background:var(--coral);border-color:var(--coral);color:#fff}
+.ctl svg{width:24px;height:24px}
+
+/* transição de capítulo: maré */
+.tide{position:absolute;inset:0;z-index:60;pointer-events:none;background:var(--coral);clip-path:circle(0% at 50% 50%);display:grid;place-items:center}
+.tide b{font:900 150px var(--sans);letter-spacing:-.05em;color:var(--ink);opacity:0;transform:scale(.9);transition:all .4s var(--out)}
+.tide.go{animation:tide 1.25s var(--io) forwards}
+.tide.go b{opacity:1;transform:none;transition-delay:.25s}
+@keyframes tide{0%{clip-path:circle(0% at var(--tx,50%) 50%)}45%,58%{clip-path:circle(150% at var(--tx,50%) 50%)}100%{clip-path:circle(0% at calc(100% - var(--tx,50%)) 50%)}}
+
+/* índice */
+.index{position:absolute;inset:0;z-index:70;background:rgba(13,13,13,.97);padding:120px 120px;display:grid;grid-template-rows:auto 1fr;gap:40px;opacity:0;visibility:hidden;transition:opacity .35s,visibility 0s .35s}
+.index.open{opacity:1;visibility:visible;transition:opacity .35s}
+.index ol{list-style:none;display:grid;grid-template-columns:repeat(3,1fr);gap:0 50px;align-content:start}
+.index button{width:100%;text-align:left;padding:15px 0;border-top:2px solid rgba(242,242,242,.14);display:grid;grid-template-columns:64px 1fr;font:700 28px var(--sans);color:var(--smoke)}
+.index button span{font:500 20px var(--mono);color:rgba(242,242,242,.5);padding-top:6px}
+.index button:hover,.index button.now{color:var(--coral)}
+
+/* ═════════ 00 · ABERTURA — Sinal ═════════ */
+.s-open .veil{position:absolute;inset:0;background:radial-gradient(ellipse 58% 40% at 50% 60%,rgba(13,13,13,.62),rgba(13,13,13,.4) 60%,rgba(13,13,13,.9) 100%)}
+.s-open .black{position:absolute;inset:0;background:var(--ink);z-index:1;pointer-events:none;opacity:1;transition:opacity 1.6s ease .5s}
+.on.s-open .black{opacity:0}
+.s-open .first{position:absolute;left:592px;top:452px;width:60px;height:60px;border-radius:50%;border:3px solid #fff;transform:translate(-50%,-50%) scale(.2);opacity:0;z-index:2}
+.on.s-open .first{animation:first 1.8s var(--out) .2s forwards}
+@keyframes first{0%{opacity:1;transform:translate(-50%,-50%) scale(.2)}100%{opacity:0;transform:translate(-50%,-50%) scale(40)}}
+.s-open .sonar{z-index:2}
+.s-open .lock{position:absolute;left:410px;top:314px;width:1100px;z-index:3;clip-path:inset(0 100% 0 0);
+  transform:translate(calc(var(--mx,0) * -18px),calc(var(--my,0) * -12px));transition:clip-path 1.6s var(--io) 1s,transform .8s var(--out)}
+.on.s-open .lock{clip-path:inset(0 -2% 0 0)}
+.s-open .lock img{width:100%;filter:drop-shadow(0 0 40px rgba(255,50,49,.45)) drop-shadow(0 30px 60px rgba(0,0,0,.6))}
+.s-open .thesis{position:absolute;left:0;right:0;top:660px;text-align:center;z-index:3;font-size:76px;font-weight:700;letter-spacing:-.035em;line-height:1.02}
+.s-open .thesis .w{display:inline-block;opacity:0;transform:translateY(30px);filter:blur(8px);transition:all 1.1s var(--out)}
+.on.s-open .thesis .w{opacity:1;transform:none;filter:none;transition-delay:calc(var(--i) * 110ms + 2200ms)}
+.s-open .thesis .pr{color:rgba(242,242,242,.55);text-decoration:line-through;text-decoration-color:var(--coral);text-decoration-thickness:6px}
+.s-open .foot{position:absolute;left:120px;right:120px;bottom:150px;display:flex;justify-content:space-between;align-items:center;z-index:3}
+.s-open .foot .tag{font-size:22px;color:rgba(242,242,242,.82)}
+.s-open .foot b{font:700 26px var(--sans);letter-spacing:-.01em;display:flex;gap:14px;align-items:center}
+.s-open .foot b img{height:34px;filter:brightness(0) invert(1)}
+.s-open .hint{position:absolute;left:50%;bottom:108px;transform:translateX(-50%);z-index:3;font:500 18px var(--mono);color:rgba(242,242,242,.5);letter-spacing:.08em}
+.s-open .rv{transition-delay:calc(var(--d,0) * 1ms + 2600ms)!important}
+
+/* ═════════ 01 · NOME — A promessa ═════════ */
+.s-name{background:#0D0D0D}
+.s-name .ghost{position:absolute;left:-30px;top:80px;font-weight:900;font-size:440px;line-height:.8;letter-spacing:-.06em;color:transparent;-webkit-text-stroke:3px rgba(255,50,49,.55);white-space:nowrap;
+  transform:translateX(calc(var(--mx,0) * -30px));transition:transform .9s var(--out)}
+.s-name .ghost span{display:inline-block;animation:drift 26s linear infinite}
+@keyframes drift{from{transform:translateX(0)}to{transform:translateX(-25%)}}
+.s-name .kickw{position:absolute;left:120px;top:150px}
+.s-name .word{position:absolute;left:120px;top:440px;font-weight:900;font-size:250px;line-height:.85;letter-spacing:-.06em;color:#fff;display:flex;align-items:flex-end}
+.s-name .word .nn{display:inline-block;max-width:0;overflow:hidden;vertical-align:bottom;color:var(--coral);transform:translateY(-120%);transition:max-width .9s var(--out),transform .9s cubic-bezier(.2,1.5,.4,1)}
+.s-name.s1 .word .nn{max-width:.62em;transform:none}
+.s-name .from{position:absolute;left:128px;top:680px;font:500 24px var(--mono);color:rgba(242,242,242,.75);letter-spacing:.04em}
+.s-name .means{position:absolute;right:120px;top:470px;width:640px;display:grid;gap:4px;text-align:right}
+.s-name .means span{font-size:52px;font-weight:700;letter-spacing:-.03em;line-height:1.08;color:rgba(242,242,242,.4)}
+.s-name .means span.big{color:#fff;font-size:64px}
+.s-name .promise{position:absolute;left:120px;right:120px;bottom:160px;display:flex;align-items:flex-end;justify-content:space-between;gap:60px;border-top:3px solid rgba(242,242,242,.18);padding-top:30px}
+.s-name .promise p{font-size:44px;font-weight:700;letter-spacing:-.025em;line-height:1.12;max-width:22em}
+.s-name .promise img{height:120px;flex:none}
+
+/* ═════════ 02 · POD (pilares) ═════════ */
+.s-pod .head{position:absolute;left:120px;top:150px;width:760px;display:grid;gap:26px}
+.s-pod .orca{position:absolute;left:1020px;top:330px;width:420px;filter:drop-shadow(0 0 70px rgba(255,50,49,.35))}
+.s-pod svg.lines{position:absolute;inset:0;width:1920px;height:1080px;pointer-events:none}
+.s-pod svg.lines path{fill:none;stroke:rgba(255,50,49,.85);stroke-width:3;stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset 1.2s var(--swim)}
+.s-pod svg.lines path.in{stroke-dashoffset:0}
+.pill{position:absolute;display:grid;gap:4px;max-width:420px}
+.pill b{font-size:40px;font-weight:800;letter-spacing:-.025em;line-height:1.02}
+.pill span{font:500 20px var(--mono);color:var(--coral);letter-spacing:.08em}
+.s-pod .facts{position:absolute;left:120px;bottom:200px;width:700px;font-size:30px;line-height:1.42;color:var(--soft)}
+
+/* ═════════ 03 · CORES ═════════ */
+.s-col .tri{position:absolute;inset:0;display:flex}
+.s-col .p{position:relative;flex:1;transition:flex 1s var(--out);overflow:hidden;cursor:pointer;display:flex;flex-direction:column;justify-content:flex-end;padding:0 56px 190px;text-align:left}
+.s-col .p.act{flex:2.4}
+.s-col .p .nm{font-size:68px;font-weight:900;letter-spacing:-.045em;line-height:.92}
+.s-col .p .hx{font:500 26px var(--mono);margin-top:14px;opacity:.85}
+.s-col .p .po{font-size:40px;line-height:1.22;font-weight:500;letter-spacing:-.015em;max-width:17em;margin-bottom:34px;opacity:0;transform:translateY(20px);transition:all .6s var(--out)}
+.s-col .p.act .po{opacity:1;transform:none;transition-delay:.35s}
+.s-col .p .fl{font:500 22px var(--mono);letter-spacing:.1em;text-transform:uppercase;margin-top:20px;opacity:.9}
+.s-col .p1{background:#F2F2F2;color:#0D0D0D}.s-col .p2{background:#FF3231;color:#fff}.s-col .p3{background:#0D0D0D;color:#F2F2F2;box-shadow:inset 2px 0 0 rgba(242,242,242,.15)}
+.s-col .head{position:absolute;left:56px;top:140px;z-index:3;color:#0D0D0D;pointer-events:none}
+.s-col .head .h2{font-size:84px}
+.s-col .bignum{position:absolute;right:30px;top:330px;font-size:300px;font-weight:900;letter-spacing:-.06em;opacity:.09;line-height:.8}
+
+/* ═════════ 04 · DUAS MARCAS ═════════ */
+.s-two .l,.s-two .r{position:absolute;inset:0}
+.s-two .l{background:var(--ink);clip-path:polygon(0 0,58% 0,42% 100%,0 100%)}
+.s-two .r{background:#F6F4F3;color:var(--ink);clip-path:polygon(58% 0,100% 0,100% 100%,42% 100%)}
+.s-two .lv{position:absolute;left:120px;top:300px;width:640px}
+.s-two .rv2{position:absolute;right:150px;top:230px;width:480px}
+.s-two .cap{position:absolute;display:grid;gap:14px}
+.s-two .cap .h3{font-size:46px}
+.s-two .cap ul{list-style:none;display:grid;gap:8px;font:500 22px var(--mono)}
+.s-two .cap ul li::before{content:"— ";color:var(--coral)}
+.s-two .cl{left:120px;bottom:190px;width:640px}
+.s-two .cr{right:120px;bottom:190px;width:560px;text-align:right;justify-items:end;color:var(--ink)}
+.s-two .cr ul{color:#2b2626}
+.s-two .cr ul li::before{color:var(--rc)}
+.s-two .head{position:absolute;left:120px;top:140px}
+.s-two .vers{display:flex;gap:14px;justify-content:flex-end}
+.s-two .vers span{width:84px;height:84px;border-radius:20px;display:grid;place-items:center;box-shadow:0 0 0 2px rgba(13,13,13,.12)}
+.s-two .vers img{width:58px}
+
+/* ═════════ 05 · CAOS (colagem) ═════════ */
+.s-chaos{background:#1A1615}
+.s-chaos .photo{position:absolute;right:-40px;top:-30px;width:1080px;height:1140px;transform:rotate(3deg)}
+.s-chaos .photo .halftone{opacity:.45}
+.strip{position:absolute;padding:6px 40px 14px;font-weight:900;font-size:168px;line-height:.92;letter-spacing:-.055em;transform-origin:left center;
+  transform:rotate(var(--r)) scale(1.35);opacity:0;transition:transform .5s cubic-bezier(.2,1.6,.4,1),opacity .2s}
+.strip.in{transform:rotate(var(--r));opacity:1}
+.strip.c2{background:var(--coral);color:#fff}
+.s-chaos .kick{position:absolute;left:120px;top:150px;color:#F2F2F2}
+.s-chaos .kick::before{background:var(--coral)}
+.s-chaos .chain{position:absolute;left:120px;bottom:150px;display:flex;gap:16px;align-items:center;flex-wrap:nowrap}
+.s-chaos .chain span{font-size:32px;font-weight:800;background:#F2F2F2;color:var(--ink);padding:10px 22px;transform:rotate(-1deg)}
+.s-chaos .chain i{font-style:normal;font-size:44px;color:var(--coral);font-weight:900}
+.s-chaos .chain em{font-style:normal;font-size:44px;font-weight:900;color:var(--coral);background:var(--ink);padding:10px 22px;box-shadow:0 0 0 3px var(--coral)}
+
+/* ═════════ 06 · ORIGEM ═════════ */
+.s-orig{background:#E9E4DA}
+.s-orig .head{position:absolute;left:120px;top:150px;z-index:3}
+.card{position:absolute;padding:40px 44px;display:grid;gap:16px;align-content:start;width:520px}
+.card .tg{font:500 20px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--coral)}
+.card b{font-size:54px;font-weight:900;letter-spacing:-.035em;line-height:.95}
+.card p{font-size:27px;line-height:1.38;color:#2b2626}
+.pola{position:absolute;background:#fff;padding:18px 18px 70px;box-shadow:0 26px 50px -18px rgba(0,0,0,.5)}
+.pola img{width:100%;height:100%;object-fit:cover}
+.pola figcaption{position:absolute;left:18px;right:18px;bottom:16px;font:500 22px var(--mono);color:#2b2626}
+.s-orig .stampx{position:absolute;right:120px;top:150px;border:6px solid var(--coral);color:var(--coral);padding:16px 26px;font-weight:900;font-size:40px;line-height:1.05;letter-spacing:-.01em;transform:rotate(-6deg);text-transform:uppercase}
+
+/* ═════════ 07 · PESQUISA ═════════ */
+.s-res .n53{position:absolute;left:90px;top:150px;font-weight:900;font-size:560px;line-height:.78;letter-spacing:-.07em}
+.s-res .n53cap{position:absolute;left:130px;top:600px;width:640px;font-size:34px;line-height:1.3;font-weight:500}
+.s-res .cols{position:absolute;right:120px;top:170px;bottom:230px;width:800px;display:grid;grid-template-columns:repeat(3,1fr);gap:40px;align-items:end}
+.s-res .col{height:100%;display:flex;flex-direction:column;justify-content:flex-end;gap:14px;cursor:pointer}
+.s-res .col b{font-weight:900;font-size:120px;line-height:.85;letter-spacing:-.05em}
+.s-res .col i{display:block;height:calc(var(--v) / 28 * 62%);border-radius:18px 18px 4px 4px;background:var(--c);transform:scaleY(0);transform-origin:bottom;transition:transform 1.2s var(--out)}
+.s-res .col.in i{transform:none}
+.s-res .col span{font:500 22px/1.3 var(--mono);color:var(--soft);min-height:2.6em}
+.s-res .concl{position:absolute;left:130px;bottom:160px;width:760px;display:grid;gap:10px}
+.s-res .concl>b{font-size:96px;font-weight:900;letter-spacing:-.045em;white-space:nowrap}
+.s-res .concl p{font-size:30px;line-height:1.35;color:var(--soft);max-width:28em}
+
+/* ═════════ 08 · OFICINA 3L ═════════ */
+.s-o3l{background:#080706}
+.s-o3l .ph{position:absolute;left:0;top:0;width:900px;height:1080px;overflow:hidden}
+.s-o3l .ph img{width:100%;height:100%;object-fit:cover;object-position:50% 30%;transform:scale(1.08);transition:transform 8s linear}
+.on.s-o3l .ph img{transform:scale(1)}
+.s-o3l .ph::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(8,7,6,0) 60%,#080706)}
+.s-o3l .logo{position:absolute;left:980px;top:140px;width:260px}
+.s-o3l .ttl{position:absolute;left:980px;top:420px;width:820px}
+.s-o3l .ttl .h1{font-size:110px}
+.s-o3l .ttl q{display:block;margin-top:18px;font-size:36px;font-weight:500;color:var(--gold);quotes:"“" "”"}
+.s-o3l .facts{position:absolute;left:980px;right:120px;top:690px;display:grid;grid-template-columns:repeat(2,1fr);gap:22px 50px}
+.s-o3l .facts div{border-top:3px solid rgba(233,181,24,.55);padding-top:14px}
+.s-o3l .facts b{display:block;font-size:44px;font-weight:850;letter-spacing:-.025em}
+.s-o3l .facts span{font-size:24px;color:rgba(242,242,242,.82)}
+.s-o3l .who{position:absolute;left:60px;bottom:150px;font:500 22px var(--mono);color:#fff;background:rgba(8,7,6,.72);padding:10px 16px;border-radius:6px}
+
+/* ═════════ 09 · NA PRÁTICA ═════════ */
+.s-work .bg{position:absolute;inset:0}
+.s-work .bg img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1s;transform:scale(1.06)}
+.s-work .bg img.show{opacity:1;animation:kb 12s linear forwards}
+@keyframes kb{from{transform:scale(1.02)}to{transform:scale(1.12)}}
+.s-work .shade{position:absolute;inset:0;background:linear-gradient(0deg,rgba(13,13,13,.95) 0%,rgba(13,13,13,.55) 38%,rgba(13,13,13,.1) 65%),linear-gradient(90deg,rgba(13,13,13,.7),transparent 55%)}
+.s-work .ttl{position:absolute;left:120px;bottom:330px;width:1000px}
+.s-work .was{position:absolute;left:120px;bottom:160px;display:flex;gap:14px;flex-wrap:wrap;width:900px}
+.s-work .was span{font-size:26px;font-weight:700;padding:12px 22px;border-radius:99px;background:rgba(242,242,242,.14);box-shadow:inset 0 0 0 2px rgba(242,242,242,.35)}
+.s-work .film{position:absolute;right:120px;bottom:160px;display:flex;gap:14px}
+.s-work .film button{width:104px;height:136px;border-radius:12px;overflow:hidden;opacity:.6;transition:all .4s var(--out);box-shadow:0 0 0 0 var(--gold)}
+.s-work .film button img{width:100%;height:100%;object-fit:cover}
+.s-work .film button.sel{opacity:1;transform:translateY(-12px);box-shadow:0 0 0 4px var(--gold)}
+.s-work .capx{position:absolute;right:120px;bottom:360px;font:500 22px var(--mono);background:rgba(13,13,13,.7);padding:8px 14px;border-radius:6px}
+
+/* ═════════ 10 · REVELAÇÃO ═════════ */
+.s-rev .veil{position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 50% 40%,rgba(13,13,13,.35),rgba(13,13,13,.92) 80%)}
+.s-rev .word{position:absolute;left:0;right:0;top:250px;text-align:center;font-weight:900;font-size:290px;letter-spacing:-.065em;line-height:.8}
+.s-rev .mk{position:absolute;left:50%;top:120px;width:150px;margin-left:-75px;filter:brightness(0) invert(1) drop-shadow(0 0 30px rgba(255,80,60,.8))}
+.s-rev .fy{position:absolute;left:0;right:0;top:520px;text-align:center;font:500 30px var(--mono);letter-spacing:.6em;text-transform:uppercase;color:#fff}
+.s-rev .stagewin{position:absolute;left:50%;top:600px;width:1160px;margin-left:-580px;perspective:2200px}
+.s-rev .stagewin .win{position:relative;transform:rotateX(58deg) translateY(220px) scale(.9);transform-origin:50% 0;transition:transform 1.8s var(--out);box-shadow:0 0 0 2px rgba(255,255,255,.15),0 -30px 120px -20px rgba(255,50,49,.5)}
+.s-rev.s1 .stagewin .win{transform:rotateX(16deg) translateY(-40px)}
+.s-rev .live{position:absolute;right:120px;top:140px;display:flex;gap:14px;align-items:center;font:500 22px var(--mono);background:#000;padding:14px 22px;border-radius:99px;box-shadow:0 0 0 2px rgba(255,255,255,.2)}
+.s-rev .live i{width:13px;height:13px;border-radius:50%;background:#2FD36F;animation:blink 1.6s infinite}
+@keyframes blink{50%{opacity:.3}}
+
+/* ═════════ 11 · ANATOMIA ═════════ */
+.s-anat .head{position:absolute;left:120px;top:140px;z-index:3}
+.s-anat .win{left:120px;top:280px;width:1000px}
+.s-anat svg.lead{position:absolute;inset:0;width:1920px;height:1080px;pointer-events:none;z-index:4}
+.s-anat svg.lead path{fill:none;stroke:#F2F2F2;stroke-width:3;stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset 1s var(--io)}
+.s-anat svg.lead circle{fill:var(--coral);stroke:#fff;stroke-width:3;opacity:0;transition:opacity .3s}
+.s-anat svg.lead g.in path{stroke-dashoffset:0}
+.s-anat svg.lead g.in circle{opacity:1}
+.call{position:absolute;left:1330px;width:470px;display:grid;gap:8px;opacity:.18;transition:opacity .5s}
+.call.in{opacity:1}
+.call b{font-size:38px;font-weight:850;letter-spacing:-.025em;display:flex;gap:14px;align-items:baseline}
+.call b em{font:500 22px var(--mono);font-style:normal;color:var(--coral)}
+.call p{font-size:25px;line-height:1.35;color:var(--soft)}
+.box{position:absolute;border:3px solid var(--coral);border-radius:12px;z-index:3;opacity:0;transition:opacity .4s;box-shadow:0 0 0 6px rgba(255,50,49,.18)}
+.box.in{opacity:1}
+
+/* ═════════ 12 · FLUXO DA OS ═════════ */
+.s-os .head{position:absolute;left:120px;top:140px;width:640px;display:grid;gap:22px}
+.s-os .steps{position:absolute;left:120px;top:440px;width:620px;list-style:none;display:grid;gap:4px}
+.s-os .steps li{display:grid;grid-template-columns:84px 1fr;gap:6px;padding:14px 0;border-top:2px solid var(--line);opacity:.35;transition:opacity .4s;cursor:pointer}
+.s-os .steps li.act{opacity:1}
+.s-os .steps li em{font-style:normal;font-weight:900;font-size:54px;line-height:.9;color:var(--coral);letter-spacing:-.04em}
+.s-os .steps li b{font-size:36px;font-weight:800;letter-spacing:-.02em;line-height:1.1}
+.s-os .steps li p{grid-column:2;font-size:24px;line-height:1.35;color:var(--soft);max-height:0;overflow:hidden;transition:max-height .7s var(--out)}
+.s-os .steps li.act p{max-height:200px}
+.s-os .deck{position:absolute;left:820px;top:200px;width:1000px;height:720px;perspective:2400px}
+.s-os .deck .win{left:0;top:80px;width:1000px;transition:transform 1s var(--out),opacity .7s,filter .7s;transform-origin:50% 100%}
+
+/* ═════════ 13 · INSPEÇÃO ═════════ */
+.s-ins .head{position:absolute;left:120px;top:140px;width:820px;display:grid;gap:22px}
+.s-ins .sys{position:absolute;left:120px;top:440px;width:860px;display:flex;flex-wrap:wrap;gap:6px 26px}
+.s-ins .sys span{font-size:58px;font-weight:850;letter-spacing:-.04em;line-height:1.05;color:var(--fg);opacity:.25;transition:opacity .4s,color .4s}
+.s-ins .sys span.hot{opacity:1;color:var(--coral)}
+.s-ins .states{position:absolute;left:120px;bottom:180px;display:flex;gap:16px}
+.s-ins .states span{font-size:32px;font-weight:800;padding:14px 26px;border-radius:14px;color:#fff}
+.s-ins .win{left:1040px;top:200px;width:760px}
+.s-ins .note{position:absolute;left:1040px;top:720px;width:760px;font-size:25px;line-height:1.4;color:var(--soft)}
+
+/* ═════════ 14 · MÓDULOS ═════════ */
+.s-mod .head{position:absolute;left:120px;top:140px;width:700px;display:grid;gap:20px}
+.s-mod .list{position:absolute;left:120px;top:370px;width:700px;display:grid;gap:0}
+.s-mod .list button{text-align:left;font-size:40px;font-weight:800;letter-spacing:-.03em;line-height:1.1;padding:4px 0;color:rgba(13,13,13,.28);transition:color .3s,transform .4s var(--out);display:flex;gap:18px;align-items:baseline}
+.s-mod .list button small{font:500 20px var(--mono);color:inherit}
+.s-mod .list button.act{color:var(--ink);transform:translateX(14px)}
+.s-mod .list button.act small{color:var(--coral)}
+.s-mod .win{left:860px;top:180px;width:940px}
+.s-mod .win .scr img{opacity:0;transition:opacity .45s}
+.s-mod .win .scr img.show{opacity:1}
+.s-mod .desc{position:absolute;left:860px;top:845px;width:940px;font-size:30px;line-height:1.35;font-weight:500}
+
+/* ═════════ 15 · APP DO CLIENTE ═════════ */
+.s-cli .head{position:absolute;left:120px;top:140px;width:760px;display:grid;gap:24px}
+.s-cli .feats{position:absolute;left:120px;top:520px;width:740px;display:grid;gap:18px}
+.s-cli .feats div{display:grid;grid-template-columns:270px 1fr;gap:20px;border-top:2px solid var(--line);padding-top:14px}
+.s-cli .feats b{font-size:32px;font-weight:850;letter-spacing:-.02em}
+.s-cli .feats span{font-size:25px;line-height:1.35;color:var(--soft)}
+.s-cli .phones{position:absolute;left:960px;top:96px;width:840px;height:760px}
+.s-cli .phone.a{left:10px;top:90px;width:300px;transform:rotate(-8deg) scale(.86)}
+.s-cli .phone.b{left:270px;top:0;z-index:2;width:300px}
+.s-cli .phone.c{left:530px;top:90px;width:300px;transform:rotate(8deg) scale(.86)}
+.s-cli .tabs{position:absolute;left:960px;width:840px;bottom:130px;display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+.s-cli .tabs button{font:600 22px var(--sans);padding:12px 22px;border-radius:99px;box-shadow:inset 0 0 0 2px rgba(255,255,255,.55);transition:all .3s}
+.s-cli .tabs button.act{background:#fff;color:var(--coral);box-shadow:none}
+
+/* ═════════ 16 · ANTES × DEPOIS ═════════ */
+.cmp{position:absolute;inset:0;--p:50;cursor:ew-resize;touch-action:none}
+.cmp .side{position:absolute;inset:0;overflow:hidden}
+.cmp .bef{background:#1A1615}
+.cmp .aft{background:#F6F4F3;color:var(--ink);clip-path:inset(0 0 0 calc(var(--p) * 1%))}
+.cmp .tx{position:absolute;top:150px;width:700px;display:grid;gap:22px;z-index:2}
+.cmp .bef .tx{left:120px}
+.cmp .aft .tx{right:120px;text-align:right;justify-items:end}
+.cmp ul{list-style:none;display:grid;gap:12px;font-size:32px;font-weight:600}
+.cmp .bef li::before{content:"✕  ";color:var(--coral);font-weight:900}
+.cmp .aft li::after{content:"  ✓";color:var(--ok);font-weight:900}
+.cmp .bef .duo{position:absolute;left:0;top:520px;width:960px;height:560px}
+.cmp .bef .strip{transform:rotate(var(--r));opacity:1;font-size:100px;z-index:2}
+.cmp .aft .win{right:120px;top:560px;width:760px}
+.cmp .handle{position:absolute;top:0;bottom:0;left:calc(var(--p) * 1%);width:5px;background:var(--coral);transform:translateX(-50%);z-index:5}
+.cmp .handle span{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:96px;height:96px;border-radius:50%;background:var(--coral);color:#fff;display:grid;place-items:center;font:800 34px var(--sans);box-shadow:0 16px 46px rgba(255,50,49,.6)}
+
+/* ═════════ 17 · ARQUITETURA ═════════ */
+.s-arch .head{position:absolute;left:120px;top:140px;width:1200px;display:grid;gap:22px}
+.s-arch .flow{position:absolute;left:120px;right:120px;top:410px;height:300px}
+.node{position:absolute;top:0;width:330px;height:250px;border:3px solid rgba(242,242,242,.35);border-radius:22px;padding:24px;display:grid;align-content:start;gap:10px;background:rgba(13,13,13,.75);text-align:left;transition:border-color .3s,background .3s}
+.node.act{border-color:var(--coral);background:rgba(255,50,49,.12)}
+.node small{font:500 20px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--coral)}
+.node b{font-size:44px;font-weight:850;letter-spacing:-.03em;line-height:1}
+.node span{font-size:22px;line-height:1.3;color:var(--soft)}
+.wire{position:absolute;top:122px;height:4px;background:rgba(242,242,242,.25)}
+.wire i{position:absolute;top:-5px;width:14px;height:14px;border-radius:50%;background:var(--coral);box-shadow:0 0 18px var(--coral);animation:pkt 1.8s linear infinite}
+.wire i:nth-child(2){animation-delay:.9s}
+@keyframes pkt{from{left:0}to{left:calc(100% - 14px)}}
+.s-arch .rbac{position:absolute;left:120px;right:120px;top:740px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.s-arch .rbac .lab{font:500 20px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--coral);width:100%}
+.s-arch .rbac span{font-size:34px;font-weight:800;padding:10px 22px;border-radius:12px;box-shadow:inset 0 0 0 3px rgba(242,242,242,.4)}
+.s-arch .rbac i{font-style:normal;font-size:40px;color:var(--coral);font-weight:900}
+.s-arch .detail{position:absolute;left:1260px;right:120px;top:140px;font-size:25px;line-height:1.4;color:var(--soft)}
+.s-arch .detail b{color:var(--fg)}
+.s-arch .deploy{position:absolute;left:120px;right:120px;bottom:160px;display:flex;align-items:center;gap:20px;font:500 24px var(--mono);color:var(--soft)}
+.s-arch .deploy b{color:var(--fg);font-weight:500}
+.s-arch .deploy hr{flex:1;border:0;height:3px;background:rgba(242,242,242,.25)}
+
+/* ═════════ 18 · QUALIDADE ═════════ */
+.s-qa .big{position:absolute;left:100px;top:190px;font-weight:900;font-size:360px;line-height:.78;letter-spacing:-.07em}
+.s-qa .cap1{position:absolute;left:130px;top:520px;width:900px;font-size:44px;line-height:1.15;font-weight:700}
+.s-qa .facts{position:absolute;right:120px;top:180px;width:640px;display:grid;gap:26px}
+.s-qa .facts div{border-top:3px solid rgba(242,242,242,.25);padding-top:16px}
+.s-qa .facts b{display:block;font-size:64px;font-weight:900;letter-spacing:-.04em;line-height:1}
+.s-qa .facts span{font-size:26px;color:var(--soft)}
+.s-qa .scrum{position:absolute;left:120px;right:120px;bottom:160px;display:grid;grid-template-columns:repeat(5,1fr);gap:0}
+.s-qa .scrum div{border-top:4px solid var(--coral);padding:16px 22px 0 0;display:grid;gap:6px}
+.s-qa .scrum em{font-style:normal;font:500 22px var(--mono);color:var(--coral)}
+.s-qa .scrum b{font-size:30px;font-weight:800;line-height:1.1;letter-spacing:-.015em}
+
+/* ═════════ 19 · CRONOGRAMA ═════════ */
+.s-tl .head{position:absolute;left:120px;top:140px;width:1100px;display:grid;gap:20px}
+.s-tl svg.wave{position:absolute;left:0;top:0;width:1920px;height:1080px;pointer-events:none}
+.s-tl svg.wave path{fill:none;stroke:var(--coral);stroke-width:6;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset 3s var(--swim)}
+.s-tl.s1 svg.wave path{stroke-dashoffset:0}
+.s-tl svg.wave path.ghost{stroke:rgba(13,13,13,.12);stroke-dashoffset:0;transition:none}
+.mo{position:absolute;width:170px;transform:translateX(-50%);text-align:center;display:grid;justify-items:center;gap:8px;opacity:.3;transition:opacity .4s}
+.s-tl.s1 .mo{opacity:1;transition-delay:calc(var(--i) * 260ms)}
+.mo b{font-size:34px;font-weight:900;letter-spacing:-.02em}
+.mo span{font-size:21px;line-height:1.25;color:var(--soft)}
+.mo i{width:22px;height:22px;border-radius:50%;background:var(--coral);box-shadow:0 0 0 6px var(--smoke),0 0 0 9px var(--coral)}
+.mo.last b{color:var(--coral)}
+.s-tl .orc{position:absolute;width:120px;offset-rotate:auto;opacity:0;transition:opacity .3s}
+.s-tl.s1 .orc{opacity:1;animation:swim 3s var(--swim) forwards}
+@keyframes swim{from{offset-distance:0%}to{offset-distance:100%}}
+
+/* ═════════ 20 · EQUIPE ═════════ */
+.s-team .head{position:absolute;left:120px;top:140px;width:900px;display:grid;gap:20px}
+.s-team .faces{position:absolute;left:1000px;top:140px;width:820px;height:440px}
+.s-team .faces img{position:absolute;width:190px;height:190px;border-radius:50%;box-shadow:0 0 0 5px var(--ink),0 0 0 8px rgba(255,50,49,.75);transition:transform .6s var(--out)}
+.s-team .faces img:hover{transform:scale(1.12)}
+.s-team .areas{position:absolute;left:120px;top:420px;display:flex;flex-wrap:wrap;gap:12px;width:820px}
+.s-team .areas button{font:700 24px var(--sans);padding:12px 22px;border-radius:99px;box-shadow:inset 0 0 0 2px rgba(242,242,242,.4);transition:all .3s}
+.s-team .areas button.act{background:var(--coral);box-shadow:none}
+.s-team .names{position:absolute;left:120px;right:120px;top:640px;display:grid;grid-template-columns:repeat(4,1fr);gap:0 40px}
+.s-team .p{border-top:3px solid rgba(242,242,242,.22);padding:16px 0 20px;transition:opacity .35s,border-color .35s}
+.s-team .p b{display:block;font-size:38px;font-weight:850;letter-spacing:-.025em}
+.s-team .p span{font-size:22px;color:var(--soft)}
+.s-team .names.f .p{opacity:.2}.s-team .names.f .p.hit{opacity:1;border-color:var(--coral)}
+.s-team .ori{position:absolute;left:120px;bottom:150px;font:500 22px var(--mono);color:var(--soft)}
+
+/* ═════════ 21 · INSTAGRAM ═════════ */
+.s-ig{background:#F2F2F2}
+.s-ig .head{position:absolute;left:120px;top:140px;width:760px;display:grid;gap:20px}
+.s-ig .posts{position:absolute;left:880px;top:110px;width:600px;height:860px}
+.s-ig .posts img{position:absolute;width:400px;box-shadow:0 30px 60px -24px rgba(0,0,0,.55);transition:transform .7s var(--out)}
+.s-ig .posts img:nth-child(1){left:0;top:40px;transform:rotate(-10deg)}
+.s-ig .posts img:nth-child(2){left:120px;top:0;transform:rotate(-2deg)}
+.s-ig .posts img:nth-child(3){left:220px;top:90px;transform:rotate(7deg)}
+.s-ig .posts:hover img:nth-child(1){transform:translate(-140px,0) rotate(-14deg)}
+.s-ig .posts:hover img:nth-child(3){transform:translate(150px,10px) rotate(12deg)}
+.s-ig .stats{position:absolute;left:120px;top:430px;width:720px;display:grid;gap:26px}
+.s-ig .stats .bg{font-size:200px;font-weight:900;letter-spacing:-.06em;line-height:.8}
+.s-ig .stats .row{display:flex;gap:56px}
+.s-ig .stats .row b{display:block;font-size:76px;font-weight:900;letter-spacing:-.045em;line-height:.95}
+.s-ig .mix{display:grid;gap:12px;width:640px}
+.s-ig .mix div{display:grid;grid-template-columns:130px 1fr 110px;gap:16px;align-items:center;font-size:24px;font-weight:600}
+.s-ig .mix i{height:14px;border-radius:7px;background:rgba(13,13,13,.12);overflow:hidden}
+.s-ig .mix em{display:block;height:100%;width:var(--w);background:var(--coral);transform:scaleX(0);transform-origin:left;transition:transform 1.2s var(--out)}
+.s-ig .mix.in em{transform:none}
+.s-ig .mix span{text-align:right;font:500 22px var(--mono)}
+.s-ig .top{position:absolute;right:120px;top:140px;width:320px;background:var(--ink);color:#fff;border-radius:26px;padding:30px;display:grid;gap:10px}
+.s-ig .top b{font-size:84px;font-weight:900;letter-spacing:-.05em;line-height:.9}
+.s-ig .top p{font-size:22px;line-height:1.35;color:rgba(255,255,255,.85)}
+.s-ig .qr{position:absolute;right:120px;bottom:160px;width:320px;background:#fff;border-radius:26px;padding:24px;display:grid;gap:10px;justify-items:center;box-shadow:0 20px 50px -30px rgba(0,0,0,.4)}
+.s-ig .qr img{width:220px}
+.s-ig .qr b{font-size:26px;font-weight:800}
+
+/* ═════════ 22 · CONCLUSÃO ═════════ */
+.s-end .head{position:absolute;left:120px;top:140px}
+.s-end .wins{position:absolute;left:120px;top:300px;width:1080px;display:grid;gap:0}
+.s-end .wins>div{display:grid;grid-template-columns:90px 1fr;padding:20px 0;border-top:3px solid rgba(242,242,242,.2)}
+.s-end .wins i{font-style:normal;font-weight:900;font-size:56px;color:var(--coral);line-height:1}
+.s-end .wins b{font-size:44px;font-weight:850;letter-spacing:-.025em}
+.s-end .wins p{font-size:26px;line-height:1.35;color:var(--soft);margin-top:6px}
+.s-end .next{position:absolute;right:120px;top:300px;width:540px;padding:36px;border-radius:28px;background:var(--coral);color:#fff;display:grid;gap:18px}
+.s-end .next ul{list-style:none;display:grid;gap:16px}
+.s-end .next li{font-size:28px;line-height:1.3;font-weight:600;display:grid;grid-template-columns:36px 1fr}
+.s-end .next li::before{content:"→";font-weight:900}
+
+/* ═════════ 23 · FIM ═════════ */
+.s-fin .veil{position:absolute;inset:0;background:radial-gradient(ellipse 60% 55% at 50% 45%,rgba(13,13,13,.2),rgba(13,13,13,.9) 78%)}
+.s-fin .lock{position:absolute;left:50%;top:170px;width:820px;margin-left:-410px}
+.s-fin .thx{position:absolute;left:0;right:0;top:420px;text-align:center;font-weight:900;font-size:250px;letter-spacing:-.065em;line-height:.8}
+.s-fin .faces{position:absolute;left:0;right:0;top:700px;display:flex;justify-content:center;gap:22px}
+.s-fin .faces img{width:130px;height:130px;border-radius:50%;box-shadow:0 0 0 4px rgba(255,255,255,.25);opacity:0;transform:translateY(30px);transition:all .8s var(--out)}
+.on.s-fin .faces img{opacity:1;transform:none;transition-delay:calc(var(--i) * 80ms + 700ms)}
+.s-fin .names{position:absolute;left:0;right:0;top:870px;text-align:center;font:500 22px var(--mono);color:rgba(242,242,242,.85);padding:0 200px;line-height:1.5}
+.s-fin .links{position:absolute;left:0;right:0;bottom:120px;display:flex;justify-content:center;gap:50px;font:500 22px var(--mono)}
+.s-fin .links a{color:#fff;text-decoration:none;border-bottom:2px solid var(--coral)}
+
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;transition-delay:0s!important}}
+.rot{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);z-index:99;background:var(--coral);color:#fff;font:500 13px var(--mono);padding:8px 12px;border-radius:99px;display:none}
+@media (orientation:portrait) and (max-width:700px){.rot{display:block}}
+</style>
+</head>
+<body>
+
+
+<div class="viewport" id="vp"><div class="stage" id="stage" data-tone="dark">
+<canvas id="liquid" width="960" height="540"></canvas>
+
+<!-- 00 ABERTURA -->
+<section class="scene liq s-open" data-title="Verenna Digital" data-chap="Abertura">
+  <div class="veil"></div>
+  <div class="black"></div>
+  <i class="first"></i>
+  <div class="sonar" style="left:592px;top:452px;--s:1700px"><i></i><i></i><i></i><i></i></div>
+  <div class="lock"><img src="img/logo-full-light.webp" alt="Verenna Digital"></div>
+  <h1 class="thesis" aria-label="Transformando problemas em soluções digitais."><span class="w" style="--i:0">Transformando</span> <span class="w pr" style="--i:1">problemas</span><br><span class="w" style="--i:2">em</span> <span class="w glow" style="--i:3">soluções</span> <span class="w" style="--i:4">digitais.</span></h1>
+  <div class="foot"><span class="tag rv">ETEC Paulistano · Desenvolvimento de Sistemas · 2026</span><b class="rv" style="--d:200">apresenta <img src="img/revisacar-mark.webp" alt="">RevisaCar</b></div>
+  <p class="hint rv" style="--d:600">clique para emitir um sinal · → para avançar</p>
+</section>
+
+<!-- 01 NOME -->
+<section class="scene s-name" data-title="A promessa no nome" data-chap="A Verenna" data-steps="2">
+  <div class="ghost" aria-hidden="true"><span>VERDADE VERDADE VERDADE VERDADE</span></div>
+  <p class="kick kickw rv">O nome</p>
+  <div class="word rv" style="--d:150">Vere<span>n</span><span class="nn">n</span>a</div>
+  <p class="from rv" style="--d:350">de Verena · nome de origem germânica</p>
+  <div class="means rv" style="--d:450"><span>a sincera</span><span>a que fala a verdade</span><span class="big">a verdade.</span></div>
+  <div class="promise" data-at="2"><p>Um nome que é promessa: <span class="c">transformar problemas em soluções</span> sem esconder nada.</p><img src="img/orca-flat.webp" alt=""></div>
+</section>
+
+<!-- 02 POD -->
+<section class="scene s-pod" data-title="A orca" data-chap="A Verenna" data-steps="5">
+  <div class="head">
+    <p class="kick rv">Símbolo</p>
+    <h2 class="h1"><span class="ln"><span>Por que</span></span><span class="ln"><span class="c" style="--d:100">uma orca.</span></span></h2>
+  </div>
+  <p class="facts rv" style="--d:400">Um dos animais mais inteligentes e organizados do oceano. Vive em grupo, protege a família e caça com estratégia coordenada.</p>
+  <svg class="lines" viewBox="0 0 1920 1080" aria-hidden="true" id="podLines"></svg>
+  <img class="orca rv" style="--d:300" src="img/orca-flat.webp" alt="Orca oficial da Verenna">
+  <div id="pills"></div>
+</section>
+
+<!-- 03 CORES -->
+<section class="scene s-col" data-title="Paleta" data-chap="A Verenna" data-steps="3">
+  <div class="tri" id="tri">
+    <button class="p p1" data-k="1"><span class="bignum">01</span><span class="po">Ela existe entre a presença e o silêncio. Não busca atenção, mas cria o espaço para que tudo exista com clareza.</span><span class="nm">White Smoke</span><span class="hx">#F2F2F2 · 242 242 242</span><span class="fl">Leveza e suavidade</span></button>
+    <button class="p p2" data-k="2"><span class="bignum">02</span><span class="po">Ela existe como um pulso de energia e intenção. Não pede permissão para ser vista, mas afirma.</span><span class="nm">Coral Red</span><span class="hx">#FF3231 · 255 50 49</span><span class="fl">Energia e dinamismo</span></button>
+    <button class="p p3" data-k="3"><span class="bignum">03</span><span class="po">Ele existe na profundidade onde tudo começa. Não se impõe, mas sustenta.</span><span class="nm">Obsidian Black</span><span class="hx">#0D0D0D · 13 13 13</span><span class="fl">Mistério e profundidade</span></button>
+  </div>
+  <div class="head rv"><p class="kick">Identidade visual</p><h2 class="h2" style="margin-top:18px">Três cores.</h2></div>
+</section>
+
+<!-- 04 DUAS MARCAS -->
+<section class="scene s-two" data-title="Empresa e produto" data-chap="A Verenna">
+  <div class="l"></div><div class="r"></div>
+  <div class="head rv"><p class="kick">Duas marcas, uma família</p></div>
+  <img class="lv rv" style="--d:200" src="img/logo-full-light.webp" alt="Logo Verenna Digital">
+  <img class="rv2 rv" style="--d:400" src="img/revisacar-lockup.png" alt="Logo RevisaCar, For you">
+  <div class="cap cl rv" style="--d:600"><span class="h3">A empresa</span><ul><li>orca: inteligência e proteção</li><li>Coral Red #FF3231</li><li>tipografia institucional JK Abode</li></ul></div>
+  <div class="cap cr rv" style="--d:700"><span class="h3">O produto</span><ul><li>carro + lupa: vistoria e análise técnica</li><li>vermelho #EB1B21, versões preta e branca</li><li>interface em DM Sans e DM Mono</li></ul>
+    <div class="vers"><span style="background:#fff"><img src="img/revisacar-mark.webp" alt=""></span><span style="background:#fff"><img src="img/revisacar-mark.webp" alt="" style="filter:brightness(0)"></span><span style="background:#0D0D0D"><img src="img/revisacar-mark.webp" alt="" style="filter:brightness(0) invert(1)"></span></div></div>
+</section>
+
+<!-- 05 CAOS -->
+<section class="scene s-chaos" data-title="Como funciona hoje" data-chap="O problema" data-steps="4">
+  <div class="photo duo"><img src="img/of-mao-na-massa.webp" alt="Mecânico trabalhando no motor"><div class="halftone"></div></div>
+  <p class="kick rv">Como muitas oficinas ainda trabalham</p>
+  <div class="strip paper" data-at="1" style="left:110px;top:260px;--r:-4deg">Papel.</div>
+  <div class="strip paper" data-at="2" style="left:180px;top:450px;--r:2.5deg">Planilha.</div>
+  <div class="strip c2" data-at="3" style="left:90px;top:620px;--r:-2deg">WhatsApp.</div>
+  <div class="chain" data-at="4"><span>Informação perdida</span><i>→</i><span>Retrabalho</span><i>→</i><span>Decisão no escuro</span><i>→</i><em>Qual a solução?</em></div>
+</section>
+
+<!-- 06 ORIGEM -->
+<section class="scene s-orig" data-title="De onde veio" data-chap="O problema" data-steps="3">
+  <div class="head"><p class="kick rv">Problema identificado</p><h2 class="h1" style="margin-top:20px;color:var(--ink)"><span class="ln"><span>Não foi teoria.</span></span><span class="ln"><span class="c" style="--d:100">Foi vivido.</span></span></h2></div>
+  <div class="stampx rv" style="--d:500">Insatisfação:<br>custos · limitações<br>produtividade</div>
+  <div class="card paper" data-at="1" style="left:120px;top:520px;transform:rotate(-2deg)"><span class="tape" style="left:180px;top:-18px"></span><span class="tg">Vivência prática</span><b>SENAI</b><p>Integrantes do grupo viveram a rotina de mecânica automotiva e viram o papel e a planilha no comando.</p></div>
+  <div class="card paper" data-at="2" style="left:700px;top:470px;transform:rotate(1.5deg)"><span class="tape" style="left:200px;top:-18px;transform:rotate(6deg)"></span><span class="tg">Sistema anterior</span><b>Pago, e não servia.</b><p>O cliente usou o Chave Dez. Não supria as necessidades e gerava gastos. Ele voltou para as planilhas.</p></div>
+  <figure class="pola" data-at="3" style="left:1290px;top:360px;width:500px;height:620px;transform:rotate(3deg)"><img src="img/of-motor-aberto.webp" alt="Carro com o capô aberto na Oficina 3L"><figcaption>Visitas e reuniões na oficina</figcaption></figure>
+</section>
+
+<!-- 07 PESQUISA -->
+<section class="scene s-res" data-title="Pesquisa de campo" data-chap="O problema" data-steps="4">
+  <div class="n53 glow rv num" data-count="53">53</div>
+  <p class="n53cap rv" style="--d:300">estabelecimentos do setor responderam à <span class="c">pesquisa de campo</span>.</p>
+  <div class="cols" id="resCols">
+    <div class="col" data-at="1" style="--v:15;--c:#9E1510"><b class="num" data-count="15">15</b><i></i><span>não usam sistema, mas pretendem</span></div>
+    <div class="col" data-at="2" style="--v:10;--c:#FF8A86"><b class="num" data-count="10">10</b><i></i><span>não usam e não pretendem</span></div>
+    <div class="col" data-at="3" style="--v:28;--c:#FF3231"><b class="num" data-count="28">28</b><i></i><span>já usam um sistema</span></div>
+  </div>
+  <div class="concl" data-at="4"><b class="glow-r"><span class="num" data-count="43">43</span> de 53</b><p>usam ou querem um sistema. Entre os que já usam, muitos reclamam de <b>limitações</b> e <b>custo alto</b>.</p></div>
+</section>
+
+<!-- 08 OFICINA 3L -->
+<section class="scene s-o3l" data-title="Oficina 3L" data-chap="O cliente" data-steps="1">
+  <div class="ph"><img src="img/gestores-hd.webp" alt="Os gestores da Oficina 3L na oficina"></div>
+  <span class="who rv" style="--d:900">Lucas Andrelo e Lucas Lacerda</span>
+  <img class="logo rv" style="--d:200" src="img/oficina3l-logo.webp" alt="Logo da Oficina 3L">
+  <div class="ttl"><p class="kick rv" style="color:var(--gold)">O cliente real</p><h2 class="h1" style="margin-top:18px"><span class="ln"><span>Oficina 3L</span></span></h2><q class="rv" style="--d:400">Transparência e cuidado do início ao fim.</q></div>
+  <div class="facts" data-at="1">
+    <div><b>2 mecânicos</b><span>dono: Lucas Andrelo dos Santos</span></div>
+    <div><b class="num">≈ 7 carros</b><span>atendidos por semana</span></div>
+    <div><b>Linha leve</b><span>revisão e conserto</span></div>
+    <div><b>Franco da Rocha</b><span>atendimento presencial · SP</span></div>
+  </div>
+</section>
+
+<!-- 09 NA PRÁTICA -->
+<section class="scene s-work" data-title="Na prática" data-chap="O cliente" data-steps="1">
+  <div class="bg" id="workBg">
+    <img class="show" src="img/of-equipe.webp" alt="Os dois sócios de costas com moletons da Oficina 3L" data-c="Os moletons com os nomes dos sócios">
+    <img src="img/of-triciclo-servico.webp" alt="Triciclo em serviço" data-c="Triciclo em serviço">
+    <img src="img/of-manometro.webp" alt="Teste com manômetro" data-c="Diagnóstico com manômetro">
+    <img src="img/of-radiador.webp" alt="Radiador instalado" data-c="Troca de radiador">
+    <img src="img/of-fusca.webp" alt="Fusca com o motor aberto" data-c="Fusca no atendimento">
+  </div>
+  <div class="shade"></div>
+  <div class="ttl"><p class="kick rv">Gestão antes do RevisaCar</p><h2 class="h1" style="margin-top:18px"><span class="ln"><span>O serviço era bom.</span></span><span class="ln"><span class="c" style="--d:100">A gestão, não.</span></span></h2></div>
+  <div class="was" data-at="1"><span>Serviços em planilhas do Excel</span><span>Orçamento por WhatsApp e telefone</span><span>Dados perdidos</span></div>
+  <span class="capx" id="workCap">Os moletons com os nomes dos sócios</span>
+  <div class="film rv" style="--d:500" id="workFilm">
+    <button class="sel" aria-label="Foto 1"><img src="img/of-equipe.webp" alt=""></button>
+    <button aria-label="Foto 2"><img src="img/of-triciclo-servico.webp" alt=""></button>
+    <button aria-label="Foto 3"><img src="img/of-manometro.webp" alt=""></button>
+    <button aria-label="Foto 4"><img src="img/of-radiador.webp" alt=""></button>
+    <button aria-label="Foto 5"><img src="img/of-fusca.webp" alt=""></button>
+  </div>
+</section>
+
+<!-- 10 REVELAÇÃO -->
+<section class="scene liq s-rev" data-title="RevisaCar" data-chap="RevisaCar" data-steps="1">
+  <div class="veil"></div>
+  <img class="mk rv" src="img/revisacar-mark.webp" alt="Marca RevisaCar">
+  <span class="live rv" style="--d:700"><i></i>No ar · revisacarapp.com</span>
+  <h2 class="word glow"><span class="ln"><span style="--d:300">RevisaCar</span></span></h2>
+  <p class="fy rv" style="--d:700">For you</p>
+  <div class="stagewin"><div class="win"><div class="bar"><i></i><i></i><i></i><span>revisacarapp.com</span></div><div class="scr"><img src="img/v2-hoje.webp" alt="Tela Hoje do RevisaCar"></div></div></div>
+</section>
+
+<!-- 11 ANATOMIA -->
+<section class="scene s-anat" data-title="Anatomia da tela Hoje" data-chap="RevisaCar" data-steps="4">
+  <div class="grid-bp"></div>
+  <div class="head"><p class="kick rv">Planta da tela · Hoje</p><h2 class="h2 rv" style="--d:100;margin-top:16px">Abriu o sistema, <span class="c">viu o dia.</span></h2></div>
+  <div class="win rv" style="--d:250"><div class="bar"><i></i><i></i><i></i><span>revisacarapp.com</span></div><div class="scr"><img src="img/v2-hoje.webp" alt="Tela Hoje"><span class="demo">tela real · dados de demonstração</span></div></div>
+  <div id="boxes"></div>
+  <svg class="lead" viewBox="0 0 1920 1080" id="lead" aria-hidden="true"></svg>
+  <div id="calls"></div>
+</section>
+
+<!-- 12 FLUXO DA OS -->
+<section class="scene s-os" data-title="Ordem de serviço" data-chap="RevisaCar" data-steps="4">
+  <div class="head"><p class="kick rv">Ordem de serviço</p><h2 class="h2"><span class="ln"><span>Do portão à entrega,</span></span><span class="ln"><span class="c" style="--d:100">tudo registrado.</span></span></h2></div>
+  <ol class="steps" id="osSteps">
+    <li><em>01</em><b>Abrir a OS</b><p>Prioridade, dados do carro, reclamação do cliente e o histórico das últimas OS.</p></li>
+    <li><em>02</em><b>Ficha de entrada</b><p>OS, cliente e veículo: quilometragem, combustível, chassi e o relato do cliente.</p></li>
+    <li><em>03</em><b>Fotos obrigatórias</b><p>Hodômetro, frente, traseira e laterais vão para o PDF. Foto pulada fica com motivo.</p></li>
+    <li><em>04</em><b>Inspeção</b><p>Cada item recebe OK, Atenção, Crítico ou N/A, com observação.</p></li>
+    <li><em>05</em><b>Quadro de atendimento</b><p>Fila, em execução, aguardando peça e pronto para entregar.</p></li>
+  </ol>
+  <div class="deck" id="osDeck"></div>
+</section>
+
+<!-- 13 INSPEÇÃO -->
+<section class="scene light s-ins" data-title="Inspeção" data-chap="RevisaCar">
+  <div class="head"><p class="kick rv">Checklist geral de inspeção</p><h2 class="h2"><span class="ln"><span>O carro inteiro,</span></span><span class="ln"><span class="c" style="--d:100">sistema por sistema.</span></span></h2></div>
+  <div class="sys rv" style="--d:300" id="sys"><span>Motor</span><span>Frenagem</span><span>Suspensão</span><span>Elétrico</span><span>Transmissão</span><span>Pneus e rodas</span><span>Carroceria</span><span>Interior</span><span>Personalizada</span></div>
+  <div class="states rv" style="--d:500"><span style="background:var(--ok)">OK</span><span style="background:var(--warn)">Atenção</span><span style="background:var(--rc)">Crítico</span><span style="background:#6b6363">N/A</span></div>
+  <div class="win rv" style="--d:400"><div class="bar"><i></i><i></i><i></i><span>Inspeção veicular</span></div><div class="scr"><img src="img/v2-inspecao.webp" alt="Tela real de inspeção do motor"><span class="demo">tela real</span></div></div>
+  <p class="note rv" style="--d:600">Depois da inspeção, o encerramento mostra o resumo da OS, os técnicos, a assinatura e gera o relatório em PDF.</p>
+</section>
+
+<!-- 14 MÓDULOS -->
+<section class="scene light s-mod" data-title="Módulos" data-chap="RevisaCar">
+  <div class="head"><p class="kick rv">Plataforma centralizada</p><h2 class="h2"><span class="ln"><span>Tudo num</span></span><span class="ln"><span class="c" style="--d:100">lugar só.</span></span></h2></div>
+  <div class="list rv" style="--d:300" id="modList">
+    <button data-i="v2-hoje" data-t="O dia da oficina: carros no pátio, orçamentos pendentes, agenda e pendências."><small>01</small>Hoje</button>
+    <button data-i="v2-ordens" data-t="Todas as OS com status, mecânico, entrada e valor. Busca por placa."><small>02</small>Ordens de serviço</button>
+    <button data-i="v2-atendimento" data-t="Quem está com cada carro e há quanto tempo."><small>03</small>Atendimento</button>
+    <button data-i="v2-agenda" data-t="Agenda por dia, semana ou mês."><small>04</small>Agenda</button>
+    <button data-i="v2-clientes" data-t="Contato, veículo, última visita e gasto total de cada cliente."><small>05</small>Clientes</button>
+    <button data-i="v2-veiculos" data-t="Placa, quilometragem, dono, situação e última OS."><small>06</small>Veículos</button>
+    <button data-i="v2-estoque" data-t="Peças, quantidade, preço e alerta de estoque baixo. Também monta kits."><small>07</small>Estoque</button>
+    <button data-i="v2-catalogo" data-t="Serviços com categoria, duração e preço."><small>08</small>Catálogo</button>
+    <button data-i="v2-relatorios" data-t="Faturamento, OS e ticket médio por período."><small>09</small>Relatórios</button>
+    <button data-i="v2-financeiro" data-t="Faturamento, despesas, lucro, contas a receber e caixa de reserva."><small>10</small>Financeiro</button>
+  </div>
+  <div class="win rv" style="--d:400"><div class="bar"><i></i><i></i><i></i><span>revisacarapp.com</span></div><div class="scr" id="modScr"><span class="demo">tela real · dados de demonstração</span></div></div>
+  <p class="desc rv" style="--d:600" id="modTxt"></p>
+</section>
+
+<!-- 15 APP DO CLIENTE -->
+<section class="scene red s-cli" data-title="App do cliente" data-chap="RevisaCar">
+  <div class="head"><p class="kick rv">App do cliente · PWA</p><h2 class="h2"><span class="ln"><span>E o dono do carro</span></span><span class="ln"><span style="--d:100;color:var(--ink)">acompanha tudo.</span></span></h2><p class="lede rv" style="--d:300">Abre no navegador e instala no celular, sem loja de aplicativos.</p></div>
+  <div class="feats rv" style="--d:450">
+    <div><b>Orçamentos</b><span>aprova ou recusa, com comentário</span></div>
+    <div><b>Agendamento</b><span>serviço, data e horário em 4 passos</span></div>
+    <div><b>Saúde do carro</b><span>manutenções e lembretes por quilometragem</span></div>
+    <div><b>Garantia digital</b><span>histórico de cada serviço feito</span></div>
+  </div>
+  <div class="phones">
+    <div class="phone a rv" style="--d:300"><div class="s"><img src="img/cli-saude.webp" alt="Saúde do veículo"></div></div>
+    <div class="phone b rv" style="--d:200"><div class="s"><img id="cliImg" src="img/cli-inicio.webp" alt="Tela inicial do app do cliente"></div></div>
+    <div class="phone c rv" style="--d:400"><div class="s"><img src="img/cli-orcamentos.webp" alt="Orçamentos"></div></div>
+  </div>
+  <div class="tabs rv" style="--d:600" id="cliTabs">
+    <button class="act" data-i="cli-inicio">Meu carro</button><button data-i="cli-saude">Saúde</button><button data-i="cli-orcamentos">Orçamentos</button><button data-i="cli-agendar">Agendar</button><button data-i="cli-servicos">Serviços</button><button data-i="cli-garantia">Garantia</button>
+  </div>
+</section>
+
+<!-- 16 ANTES × DEPOIS -->
+<section class="scene s-cmp" data-title="Antes e depois" data-chap="RevisaCar">
+  <div class="cmp" id="cmp">
+    <div class="side bef">
+      <div class="duo"><img src="img/of-celta-capo.webp" alt=""><div class="halftone"></div></div>
+      <div class="tx"><p class="kick">Antes</p><h2 class="h2">Papel e mensagem solta.</h2><ul><li>Planilhas separadas</li><li>Orçamento no WhatsApp</li><li>Histórico espalhado</li></ul></div>
+      <div class="strip paper" style="left:120px;top:700px;--r:-3deg">Excel.</div>
+    </div>
+    <div class="side aft">
+      <div class="tx"><p class="kick" style="flex-direction:row-reverse">Com o RevisaCar</p><h2 class="h2">A oficina inteira num lugar.</h2><ul><li>OS com checklist e fotos</li><li>Orçamento registrado</li><li>Histórico por veículo</li></ul></div>
+      <div class="win"><div class="bar"><i></i><i></i><i></i><span>revisacarapp.com</span></div><div class="scr"><img src="img/v2-hoje.webp" alt="Tela Hoje"></div></div>
+    </div>
+    <div class="handle"><span>⇆</span></div>
+  </div>
+</section>
+
+<!-- 17 ARQUITETURA -->
+<section class="scene s-arch" data-title="Arquitetura" data-chap="Construção">
+  <div class="grid-bp"></div>
+  <div class="head"><p class="kick rv">Planta técnica</p><h2 class="h2"><span class="ln"><span>Três camadas,</span></span><span class="ln"><span class="c" style="--d:100">cada uma no seu papel.</span></span></h2></div>
+  <p class="detail rv" style="--d:400" id="archTxt"><b>React</b> monta a tela com componentes; <b>Vite</b> faz o build; <b>TypeScript</b> pega erro antes de rodar. Clique em cada camada.</p>
+  <div class="flow rv" style="--d:300">
+    <button class="node act" data-k="0" style="left:0"><small>Interface</small><b>React</b><span>Vite · TypeScript<br>painel e app do cliente</span></button>
+    <div class="wire" style="left:330px;width:120px"><i></i><i></i></div>
+    <button class="node" data-k="1" style="left:450px"><small>API</small><b>Django REST</b><span>Python · rotas, regras<br>e autenticação</span></button>
+    <div class="wire" style="left:780px;width:120px"><i></i><i></i></div>
+    <button class="node" data-k="2" style="left:900px"><small>Dados</small><b>PostgreSQL</b><span>no Supabase · fotos<br>e relacionamentos</span></button>
+    <div class="wire" style="left:1230px;width:120px"><i></i><i></i></div>
+    <button class="node" data-k="3" style="left:1350px"><small>Publicação</small><b>Render</b><span>a partir do GitHub<br>revisacarapp.com</span></button>
+  </div>
+  <div class="rbac rv" style="--d:600"><span class="lab">Controle de acesso por papel (RBAC)</span><span>usuário</span><i>→</i><span>papéis</span><i>→</i><span>permissões</span><i>→</i><span>funcionalidade</span></div>
+  <div class="deploy rv" style="--d:800"><span>login separado: <b>dono</b> e <b>funcionário</b></span><hr><span><b>LGPD</b>: só dado essencial</span><hr><span>PDF com <b>escapeHtml()</b></span></div>
+</section>
+
+<!-- 18 QUALIDADE -->
+<section class="scene s-qa" data-title="Testes e método" data-chap="Construção">
+  <div class="big glow rv num">28/28</div>
+  <p class="cap1 rv" style="--d:300">casos de teste executados, <span class="c">todos aprovados.</span></p>
+  <div class="facts rv" style="--d:500">
+    <div><b class="num">39</b><span>casos planejados no plano de testes</span></div>
+    <div><b class="num">72%</b><span>do plano executado até a documentação</span></div>
+    <div><b class="num">3 → 2</b><span>problemas achados em testes exploratórios; dois já corrigidos e validados</span></div>
+  </div>
+  <div class="scrum rv" style="--d:700"><div><em>Scrum 1</em><b>Levantamento de requisitos</b></div><div><em>2</em><b>Organização das tarefas</b></div><div><em>3</em><b>Desenvolvimento</b></div><div><em>4</em><b>Testes e melhorias</b></div><div><em>5</em><b>Entrega</b></div></div>
+</section>
+
+<!-- 19 CRONOGRAMA -->
+<section class="scene light s-tl" data-title="Cronograma" data-chap="Construção" data-steps="1">
+  <div class="head"><p class="kick rv">Cronograma · fevereiro a novembro de 2026</p><h2 class="h2"><span class="ln"><span>Dez meses <span class="c">nadando juntos.</span></span></span></h2></div>
+  <svg class="wave" viewBox="0 0 1920 1080" aria-hidden="true"><path class="ghost" id="wpg"/><path id="wp" pathLength="1"/></svg>
+  <img class="orc" id="orc" src="img/orca-flat.webp" alt="">
+  <div id="months"></div>
+</section>
+
+<!-- 20 EQUIPE -->
+<section class="scene s-team" data-title="Equipe" data-chap="Construção">
+  <div class="head"><p class="kick rv">Organograma</p><h2 class="h2"><span class="ln"><span>Oito pessoas,</span></span><span class="ln"><span class="c" style="--d:100">um grupo só.</span></span></h2></div>
+  <div class="faces rv" style="--d:200" id="faces"></div>
+  <div class="areas rv" style="--d:400" id="areas"><button class="act" data-a="">Todos</button><button data-a="gp">Gestão do produto</button><button data-a="dev">Desenvolvimento</button><button data-a="db">Banco de dados</button><button data-a="ux">Design e marketing</button><button data-a="qa">Testes e documentação</button></div>
+  <p class="ori rv" style="--d:500">Orientação · <span style="color:var(--fg)">Prof.ª Pamela Andrelo</span></p>
+  <div class="names rv" style="--d:600" id="names">
+    <div class="p" data-a="gp dev"><b>João Victor</b><span>produto · front e back</span></div>
+    <div class="p" data-a="gp dev"><b>Guilherme Barros</b><span>produto · front e back</span></div>
+    <div class="p" data-a="db dev"><b>Ygor de Araújo</b><span>liderança técnica · banco</span></div>
+    <div class="p" data-a="db dev"><b>Pablo Leoni</b><span>liderança técnica · banco</span></div>
+    <div class="p" data-a="ux"><b>Henrique Jardim</b><span>UX/UI · marketing</span></div>
+    <div class="p" data-a="ux"><b>Lucas Bertoli</b><span>UX/UI · marketing</span></div>
+    <div class="p" data-a="qa"><b>Carlos Eduardo</b><span>QA · documentação</span></div>
+    <div class="p" data-a="qa"><b>Cauã Dias</b><span>QA · documentação</span></div>
+  </div>
+</section>
+
+<!-- 21 INSTAGRAM -->
+<section class="scene light s-ig" data-title="Instagram" data-chap="Construção" data-steps="1">
+  <div class="head"><p class="kick rv">@verenna.digital · últimos 30 dias</p><h2 class="h2"><span class="ln"><span>A marca também</span></span><span class="ln"><span class="c" style="--d:100">fala com a oficina.</span></span></h2></div>
+  <div class="stats">
+    <div class="rv" style="--d:300"><span class="tag">visualizações</span><div class="bg num" data-count="1940">1.940</div></div>
+    <div class="row rv" style="--d:450"><div><span class="tag">contas alcançadas</span><b class="num" data-count="679">679</b></div><div><span class="tag">seguidores</span><b class="num" data-count="75">75</b></div></div>
+    <div class="mix" data-at="1"><div><span>Posts</span><i><em style="--w:78%"></em></i><span>1,5 mil</span></div><div><span>Stories</span><i><em style="--w:19%"></em></i><span>373</span></div><div><span>Reels</span><i><em style="--w:2%"></em></i><span>38</span></div></div>
+  </div>
+  <div class="posts rv" style="--d:300"><img src="img/ig-teste_01.webp" alt="Post: Se o seu celular quebrasse hoje, sua oficina sobreviveria?"><img src="img/ig-armadilha_01.webp" alt="Post: Excel é ótimo. Pra oficina, é uma armadilha."><img src="img/ig-teste_03.webp" alt="Post do teste de 30 segundos"></div>
+  <div class="top rv" style="--d:500"><span class="tag" style="color:#ff9b94">post mais visto</span><b class="num">825</b><p>visualizações, 32 curtidas e 24 envios em “Sua oficina merece…”, de 14/11.</p></div>
+  <div class="qr rv" style="--d:650"><img src="img/qr.png" alt="QR code do Instagram @verenna.digital"><b>@verenna.digital</b></div>
+</section>
+
+<!-- 22 CONCLUSÃO -->
+<section class="scene s-end" data-title="Conclusão" data-chap="Fechamento" data-steps="4">
+  <div class="head"><p class="kick rv">Conclusão</p><h2 class="h2 rv" style="--d:100;margin-top:16px">O que <span class="c">entregamos.</span></h2></div>
+  <div class="wins">
+    <div data-at="1"><i>✓</i><div><b>Um problema real</b><p>observado na oficina e confirmado com 53 estabelecimentos.</p></div></div>
+    <div data-at="2"><i>✓</i><div><b>Uma solução prática</b><p>OS, checklist, estoque, financeiro e clientes, mais o app do dono do carro.</p></div></div>
+    <div data-at="3"><i>✓</i><div><b>Tecnologia aplicada à gestão</b><p>React, Django REST e PostgreSQL, com RBAC e cuidado com a LGPD.</p></div></div>
+    <div data-at="4"><i>✓</i><div><b>Base para crescer</b><p>no ar em domínio próprio, pronto para outras oficinas.</p></div></div>
+  </div>
+  <div class="next rv" style="--d:400"><span class="tag" style="color:#fff">Próximos passos</span><ul><li>Acompanhar o uso diário na Oficina 3L</li><li>Levar o RevisaCar a outras oficinas</li><li>Concluir os 11 casos de teste restantes</li></ul></div>
+</section>
+
+<!-- 23 FIM -->
+<section class="scene liq s-fin" data-title="Obrigado" data-chap="Fechamento">
+  <div class="veil"></div>
+  <div class="sonar" style="left:960px;top:520px;--s:1700px;--sc:rgba(255,255,255,.25)"><i></i><i></i><i></i><i></i></div>
+  <img class="lock rv" src="img/logo-full-light.webp" alt="Verenna Digital">
+  <h2 class="thx glow"><span class="ln"><span style="--d:400">Obrigado.</span></span></h2>
+  <div class="faces" id="finFaces"></div>
+  <p class="names rv" style="--d:1200">Carlos Eduardo · Cauã Dias · Guilherme Barros · Henrique Jardim · João Victor · Lucas Bertoli · Pablo Leoni · Ygor de Araújo</p>
+  <div class="links rv" style="--d:1400"><a href="https://revisacarapp.com" target="_blank" rel="noopener">revisacarapp.com</a><a href="https://www.instagram.com/verenna.digital/" target="_blank" rel="noopener">@verenna.digital</a><a href="https://www.instagram.com/oficina.3l/" target="_blank" rel="noopener">@oficina.3l</a></div>
+</section>
+
+<div class="tide" id="tide"><b id="tideTxt"></b></div>
+<div class="hud hud-top"><div class="brand"><img class="lt" src="img/logo-full-light.webp" alt="Verenna Digital"><img class="dk" src="img/logo-full-dark.webp" alt=""></div><span class="chap" id="chap"></span></div>
+<div class="hud hud-bot">
+  <div class="count"><span id="cnum">01</span><small>/ <span id="ctot">24</span></small></div>
+  <div class="segs" id="segs"></div>
+  <div class="ctl">
+    <button id="bIdx" aria-label="Índice"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M4 6h16M4 12h16M4 18h10"/></svg></button>
+    <button id="bFs" aria-label="Tela cheia"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+    <button id="bPrev" aria-label="Anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <button id="bNext" aria-label="Próximo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 5l7 7-7 7"/></svg></button>
+  </div>
+</div>
+<div class="index" id="index"><div style="display:flex;justify-content:space-between;align-items:end"><h2 class="h2">Índice</h2><span class="tag">Esc fecha · G abre</span></div><ol id="idxList"></ol></div>
+</div></div>
+<div class="rot">Gire o celular para ver melhor</div>
+
+<script>
+(()=>{
+['selectstart','dragstart','copy','cut'].forEach(t=>addEventListener(t,e=>e.preventDefault(),{capture:true}));
+const stage=document.getElementById('stage'),vp=document.getElementById('vp');
+const scenes=[...stage.querySelectorAll('.scene')],N=scenes.length;
+let cur=-1,step=0,busy=false;
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const pad=n=>String(n).padStart(2,'0');
+const key=s=>[...s.classList].find(c=>c.startsWith('s-'));
+document.getElementById('ctot').textContent=pad(N);
+function fit(){stage.style.setProperty('--k',Math.min(innerWidth/1920,innerHeight/1080))}
+addEventListener('resize',fit);fit();
+
+/* ── líquido (WebGL) ── */
+const cv=document.getElementById('liquid');let gl=null,prog,uT,uR,uM,uI,liqOn=false,t0=performance.now(),mx=0,my=0,tmx=0,tmy=0;
+try{
+  gl=cv.getContext('webgl',{antialias:false,premultipliedAlpha:false});
+  const vs=`attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}`;
+  const fs=`precision highp float;uniform vec2 r;uniform float t;uniform vec2 m;uniform float I;
+  float h1(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+  float n(vec2 p){vec2 i=floor(p),f=fract(p);vec2 u=f*f*(3.-2.*f);return mix(mix(h1(i),h1(i+vec2(1,0)),u.x),mix(h1(i+vec2(0,1)),h1(i+vec2(1,1)),u.x),u.y);}
+  float fb(vec2 p){float v=0.,a=.5;for(int i=0;i<5;i++){v+=a*n(p);p=p*2.03+vec2(1.7,9.2);a*=.5;}return v;}
+  float H(vec2 p){vec2 q=vec2(fb(p+vec2(0.,t*.06)),fb(p+vec2(5.2,1.3)-t*.05));vec2 w=vec2(fb(p+2.8*q+vec2(1.7,9.2)+t*.04),fb(p+2.8*q+vec2(8.3,2.8)-t*.03));return fb(p+2.2*w);}
+  void main(){vec2 uv=gl_FragCoord.xy/r;vec2 p=(uv-.5)*vec2(r.x/r.y,1.)*1.9+m*.25;
+    float h=H(p);float e=.004;float hx=H(p+vec2(e,0.))-h,hy=H(p+vec2(0.,e))-h;
+    vec3 nn=normalize(vec3(-hx/e*.9,-hy/e*.9,1.));vec3 L=normalize(vec3(-.35+m.x*.4,.55-m.y*.3,.75));
+    float dif=clamp(dot(nn,L),0.,1.);float sp=pow(clamp(dot(reflect(-L,nn),vec3(0,0,1)),0.,1.),48.);
+    vec3 ob=vec3(.051),dp=vec3(.30,.025,.02),co=vec3(1.,.196,.192),hot=vec3(1.,.45,.22);
+    vec3 c=mix(ob,dp,smoothstep(.34,.52,h));c=mix(c,co,smoothstep(.52,.72,h));c=mix(c,hot,smoothstep(.78,.92,h)*.6);
+    c*=.28+.9*dif;c+=sp*vec3(1.,.9,.85)*1.1;
+    float v=smoothstep(1.25,.25,length(uv-.5)*1.6);c*=mix(.42,1.08,v);c*=I;
+    gl_FragColor=vec4(c,1.);}`;
+  const mk=(t,s)=>{const o=gl.createShader(t);gl.shaderSource(o,s);gl.compileShader(o);if(!gl.getShaderParameter(o,gl.COMPILE_STATUS))throw gl.getShaderInfoLog(o);return o};
+  prog=gl.createProgram();gl.attachShader(prog,mk(gl.VERTEX_SHADER,vs));gl.attachShader(prog,mk(gl.FRAGMENT_SHADER,fs));gl.linkProgram(prog);gl.useProgram(prog);
+  const b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
+  const loc=gl.getAttribLocation(prog,'p');gl.enableVertexAttribArray(loc);gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
+  uT=gl.getUniformLocation(prog,'t');uR=gl.getUniformLocation(prog,'r');uM=gl.getUniformLocation(prog,'m');uI=gl.getUniformLocation(prog,'I');
+  gl.uniform2f(uR,cv.width,cv.height);
+}catch(e){gl=null;cv.style.background='radial-gradient(ellipse at 40% 40%,#5E0C0B,#0D0D0D 70%)'}
+let liqI=1;
+function frame(){
+  if(!liqOn||!gl)return;
+  mx+=(tmx-mx)*.04;my+=(tmy-my)*.04;
+  gl.uniform1f(uT,reduce?10:(performance.now()-t0)/1000);gl.uniform2f(uM,mx,my);gl.uniform1f(uI,liqI);
+  gl.drawArrays(gl.TRIANGLE_STRIP,0,4);requestAnimationFrame(frame);
+}
+function liquid(on){liqI=scenes[cur]&&scenes[cur].classList.contains('s-open')?1.22:1;stage.classList.toggle('liq',on);if(on&&!liqOn){liqOn=true;requestAnimationFrame(frame)}else if(!on)liqOn=false}
+
+/* ── navegação ── */
+const segs=document.getElementById('segs'),idx=document.getElementById('idxList'),index=document.getElementById('index');
+scenes.forEach((s,i)=>{const b=document.createElement('button');b.setAttribute('aria-label','Ir para '+s.dataset.title);b.onclick=()=>go(i);segs.appendChild(b);
+  const li=document.createElement('li');li.innerHTML=`<button><span>${pad(i+1)}</span>${s.dataset.title}</button>`;li.firstChild.onclick=()=>{toggleIdx(false);go(i)};idx.appendChild(li)});
+function toggleIdx(v){index.classList.toggle('open',v??!index.classList.contains('open'))}
+document.getElementById('bIdx').onclick=()=>toggleIdx();
+const fs=()=>{if(document.fullscreenElement)document.exitFullscreen?.();else document.documentElement.requestFullscreen?.().catch(()=>{})};
+document.getElementById('bFs').onclick=fs;
+
+const fmt=new Intl.NumberFormat('pt-BR');
+function countUp(el){const to=+el.dataset.count;if(reduce){el.textContent=fmt.format(to);return}const a=performance.now(),d=1400;(function f(t){const p=Math.min(1,(t-a)/d),e=1-Math.pow(1-p,3);el.textContent=fmt.format(Math.round(to*e));if(p<1)requestAnimationFrame(f)})(a)}
+const hooks={};
+function applySteps(){
+  const s=scenes[cur];
+  s.querySelectorAll('[data-at]').forEach(el=>{const was=el.classList.contains('in'),now=+el.dataset.at<=step;el.classList.toggle('in',now);if(now&&!was){if(el.dataset.count)countUp(el);el.querySelectorAll('[data-count]').forEach(countUp)}});
+  for(let k=1;k<=6;k++)s.classList.toggle('s'+k,step>=k);
+  const h=hooks[key(s)];h&&h.step&&h.step(step);
+}
+function hud(){
+  const s=scenes[cur];stage.dataset.tone=s.classList.contains('light')?'light':s.classList.contains('red')?'red':'dark';
+  document.getElementById('cnum').textContent=pad(cur+1);document.getElementById('chap').textContent=s.dataset.chap;
+  [...segs.children].forEach((b,i)=>{b.classList.toggle('done',i<cur);b.classList.toggle('now',i===cur)});
+  [...idx.querySelectorAll('button')].forEach((b,i)=>b.classList.toggle('now',i===cur));
+  try{history.replaceState(null,'','#cena-'+(cur+1))}catch(e){}
+}
+function show(i,st){
+  stage.style.setProperty('--dir',i>=cur?1:-1);
+  const prev=scenes[cur];
+  if(prev){prev.classList.remove('on');prev.classList.add('off');setTimeout(()=>prev.classList.remove('off'),720);const h=hooks[key(prev)];h&&h.leave&&h.leave()}
+  cur=i;step=st;const s=scenes[cur];
+  s.querySelectorAll('[data-at].in').forEach(el=>el.classList.remove('in'));
+  s.classList.add('on');liquid(s.classList.contains('liq'));hud();
+  const h=hooks[key(s)];h&&h.enter&&h.enter();applySteps();
+  s.querySelectorAll('[data-count]').forEach(el=>{if(!el.closest('[data-at]'))countUp(el)});
+}
+function go(i,st=0,dir){
+  if(i<0||i>=N||busy||(i===cur&&st===step))return;
+  const chap=cur>=0&&scenes[cur].dataset.chap!==scenes[i].dataset.chap&&!reduce;
+  if(chap){busy=true;const t=document.getElementById('tide');document.getElementById('tideTxt').textContent=scenes[i].dataset.chap;
+    t.style.setProperty('--tx',(dir??(i>cur?1:-1))>0?'20%':'80%');t.classList.remove('go');void t.offsetWidth;t.classList.add('go');
+    setTimeout(()=>show(i,st),600);setTimeout(()=>{t.classList.remove('go');busy=false},1260)}
+  else show(i,st);
+}
+const steps=i=>+(scenes[i].dataset.steps||0);
+function next(){if(index.classList.contains('open'))return;if(step<steps(cur)){step++;applySteps()}else go(cur+1,0,1)}
+function prev(){if(index.classList.contains('open'))return;if(step>0){step--;applySteps()}else if(cur>0)go(cur-1,steps(cur-1),-1)}
+document.getElementById('bNext').onclick=next;document.getElementById('bPrev').onclick=prev;
+addEventListener('keydown',e=>{const k=e.key;
+  if(['ArrowRight','PageDown',' ','Enter','ArrowDown'].includes(k)){if(k==='Enter'&&e.target.tagName==='BUTTON')return;e.preventDefault();next()}
+  else if(['ArrowLeft','PageUp','Backspace','ArrowUp'].includes(k)){e.preventDefault();prev()}
+  else if(k==='Home')go(0);else if(k==='End')go(N-1);
+  else if(k==='g'||k==='G')toggleIdx();else if(k==='Escape')toggleIdx(false);
+  else if(k==='f'||k==='F')fs();
+  else if(k==='b'||k==='B'){stage.style.filter=stage.style.filter?'':'brightness(0)'}
+});
+let sx=null,sy=0;
+vp.addEventListener('pointerdown',e=>{if(e.target.closest('.cmp,button,a'))return;sx=e.clientX;sy=e.clientY});
+vp.addEventListener('pointerup',e=>{if(sx===null)return;const dx=e.clientX-sx,dy=e.clientY-sy;sx=null;if(Math.abs(dx)>70&&Math.abs(dx)>Math.abs(dy))dx<0?next():prev()});
+vp.addEventListener('pointermove',e=>{const x=e.clientX/innerWidth-.5,y=e.clientY/innerHeight-.5;tmx=x;tmy=y;stage.style.setProperty('--mx',x.toFixed(3));stage.style.setProperty('--my',y.toFixed(3))});
+
+/* ── 00 sinal de sonar no clique ── */
+const open=scenes[0];
+open.addEventListener('click',e=>{if(e.target.closest('button'))return;const r=stage.getBoundingClientRect(),k=r.width/1920;const p=document.createElement('i');p.className='pingx';p.style.left=((e.clientX-r.left)/k)+'px';p.style.top=((e.clientY-r.top)/k)+'px';open.appendChild(p);setTimeout(()=>p.remove(),1500);liqI=1.55;setTimeout(()=>liqI=1.22,420)});
+
+/* ── 02 pod ── */
+const P=[['Inteligência','aplicada à tecnologia',[1500,250],'L'],['Segurança','e proteção de dados',[1560,560],'L'],['Trabalho','em equipe',[1440,860],'L'],['Estratégia','e inovação',[860,800],'R'],['Lealdade','e parcerias sólidas',[880,470],'R']];
+const pills=document.getElementById('pills'),pl=document.getElementById('podLines');const C=[1230,500];
+P.forEach(([a,b,[x,y],side],i)=>{const d=document.createElement('div');d.className='pill';d.dataset.at=i+1;d.style.cssText=`left:${x}px;top:${y}px`;d.innerHTML=`<span>0${i+1}</span><b>${a} ${b}</b>`;pills.appendChild(d);
+  const tx=side==='L'?x-20:x+300,ty=y+40;const cx=(C[0]+tx)/2+(i%2?-120:120),cy=(C[1]+ty)/2+(i%2?90:-90);
+  const p=document.createElementNS('http://www.w3.org/2000/svg','path');p.setAttribute('d',`M${C[0]},${C[1]} Q${cx},${cy} ${tx},${ty}`);p.setAttribute('pathLength','1');p.dataset.k=i+1;pl.appendChild(p)});
+hooks['s-pod']={step(k){pl.querySelectorAll('path').forEach(p=>p.classList.toggle('in',+p.dataset.k<=k))}};
+
+/* ── 03 cores ── */
+const tri=[...document.querySelectorAll('#tri .p')];
+function triAct(k){tri.forEach(p=>p.classList.toggle('act',+p.dataset.k===k))}
+tri.forEach(p=>p.onclick=()=>triAct(+p.dataset.k));
+hooks['s-col']={step:k=>triAct(k)};
+
+/* ── 05 colagem: bordas rasgadas ── */
+function torn(el){const n=26,pts=[];for(let i=0;i<=n;i++)pts.push(`${i/n*100}% ${Math.random()*7}%`);for(let i=0;i<=8;i++)pts.push(`${100-Math.random()*1.2}% ${i/8*100}%`);for(let i=n;i>=0;i--)pts.push(`${i/n*100}% ${100-Math.random()*8}%`);for(let i=8;i>=0;i--)pts.push(`${Math.random()*1.2}% ${i/8*100}%`);el.style.clipPath=`polygon(${pts.join(',')})`}
+document.querySelectorAll('.strip,.card').forEach(torn);
+
+/* ── 07 pesquisa ── */
+const rc=document.getElementById('resCols');
+rc.querySelectorAll('.col').forEach(c=>c.onclick=()=>{rc.querySelectorAll('.col').forEach(x=>x.style.opacity=x===c?1:.35)});
+hooks['s-res']={leave(){rc.querySelectorAll('.col').forEach(x=>x.style.opacity='')}};
+
+/* ── 09 galeria ── */
+const wImgs=[...document.querySelectorAll('#workBg img')],wFilm=[...document.querySelectorAll('#workFilm button')];let wI=0,wT;
+function wShow(i){wI=i;wImgs.forEach((im,j)=>im.classList.toggle('show',j===i));wFilm.forEach((b,j)=>b.classList.toggle('sel',j===i));document.getElementById('workCap').textContent=wImgs[i].dataset.c}
+wFilm.forEach((b,i)=>b.onclick=()=>{clearInterval(wT);wShow(i)});
+hooks['s-work']={enter(){wShow(0);if(!reduce)wT=setInterval(()=>wShow((wI+1)%wImgs.length),5200)},leave(){clearInterval(wT)}};
+
+/* ── 10 revelação ── */
+hooks['s-rev']={};
+
+/* ── 11 anatomia ── */
+const W={x:120,y:320,w:1000,h:625};// área da imagem (abaixo da barra de 40px)
+const REG=[[.206,.182,.77,.16,'Resumo do dia','OS abertas, aguardando aprovação, prontos e faturamento contra a meta.'],
+           [.206,.356,.504,.378,'Na oficina agora','Cada carro com cliente, placa Mercosul e status.'],
+           [.716,.356,.258,.146,'Agenda de hoje','Os agendamentos do dia, a um clique da agenda.'],
+           [.716,.509,.258,.276,'Precisa de você','Estoque baixo, OS sem pagamento, orçamento parado.']];
+const boxes=document.getElementById('boxes'),lead=document.getElementById('lead'),calls=document.getElementById('calls');
+REG.forEach(([x,y,w,h,t,d],i)=>{
+  const bx={l:W.x+x*W.w,t:W.y+y*W.h,w:w*W.w,h:h*W.h};
+  const b=document.createElement('div');b.className='box';b.style.cssText=`left:${bx.l}px;top:${bx.t}px;width:${bx.w}px;height:${bx.h}px`;boxes.appendChild(b);
+  const cy=290+i*160;const c=document.createElement('div');c.className='call';c.style.top=cy+'px';c.innerHTML=`<b><em>0${i+1}</em>${t}</b><p>${d}</p>`;calls.appendChild(c);
+  const sx=bx.l+bx.w,sy=bx.t+bx.h/2,ex=1310,ey=cy+24;
+  const g=document.createElementNS('http://www.w3.org/2000/svg','g');g.innerHTML=`<path pathLength="1" d="M${sx},${sy} L${sx+(ex-sx)*.45},${sy} L${ex-30},${ey} L${ex},${ey}"/><circle cx="${sx}" cy="${sy}" r="8"/><circle cx="${ex}" cy="${ey}" r="8"/>`;lead.appendChild(g);
+});
+hooks['s-anat']={step(k){[...boxes.children].forEach((b,i)=>b.classList.toggle('in',i+1===k));[...lead.children].forEach((g,i)=>g.classList.toggle('in',i+1<=k));[...calls.children].forEach((c,i)=>c.classList.toggle('in',k===0||i+1<=k))}};
+
+/* ── 12 OS em pilha 3D ── */
+const OS=['v2-os-detalhe','v2-os-entrada','v2-os-fotos','v2-inspecao','v2-atendimento'];
+const deck=document.getElementById('osDeck'),osLis=[...document.querySelectorAll('#osSteps li')];
+const osW=OS.map(n=>{const w=document.createElement('div');w.className='win';w.innerHTML=`<div class="bar"><i></i><i></i><i></i><span>revisacarapp.com · ordem de serviço</span></div><div class="scr"><img src="img/${n}.webp" alt="Tela real da ordem de serviço"><span class="demo">tela real · dados de demonstração</span></div>`;deck.appendChild(w);return w});
+function osTo(k){osLis.forEach((l,i)=>l.classList.toggle('act',i===k));
+  osW.forEach((w,i)=>{const d=i-k;w.style.zIndex=10-Math.abs(d);
+    if(d<0){w.style.transform=`translate3d(-70%,40px,-200px) rotateY(28deg)`;w.style.opacity=0}
+    else{w.style.transform=`translate3d(${d*44}px,${-d*46}px,${-d*160}px) rotateX(${d?6:0}deg)`;w.style.opacity=d>3?0:1;w.style.filter=d?`brightness(${1-d*.18})`:''}})}
+osLis.forEach((l,i)=>l.onclick=()=>{step=i;applySteps()});
+hooks['s-os']={step:osTo};
+
+/* ── 13 inspeção: varredura ── */
+const sys=[...document.querySelectorAll('#sys span')];let sysT,sysI=0;
+hooks['s-ins']={enter(){sysI=0;sysT=setInterval(()=>{sys.forEach((s,i)=>s.classList.toggle('hot',i===sysI%sys.length));sysI++},900)},leave(){clearInterval(sysT);sys.forEach(s=>s.classList.remove('hot'))}};
+
+/* ── 14 módulos ── */
+const mB=[...document.querySelectorAll('#modList button')],mS=document.getElementById('modScr'),mT=document.getElementById('modTxt');let mI=0,mTm;
+const mImgs=mB.map(b=>{const im=new Image();im.src='img/'+b.dataset.i+'.webp';im.alt='Tela real: '+b.textContent.replace(/^\d+/,'');im.draggable=false;mS.insertBefore(im,mS.firstChild);return im});
+function mShow(i){mI=i;mB.forEach((b,j)=>b.classList.toggle('act',j===i));mImgs.forEach((im,j)=>im.classList.toggle('show',j===i));mT.textContent=mB[i].dataset.t}
+mB.forEach((b,i)=>b.onmouseenter=b.onclick=()=>{clearInterval(mTm);mShow(i)});mShow(0);
+hooks['s-mod']={enter(){mShow(0);if(!reduce)mTm=setInterval(()=>mShow((mI+1)%mB.length),3200)},leave(){clearInterval(mTm)}};
+
+/* ── 15 cliente ── */
+const cT=[...document.querySelectorAll('#cliTabs button')],cImg=document.getElementById('cliImg');let cI=0,cTm;
+cT.forEach(b=>{const im=new Image();im.src='img/'+b.dataset.i+'.webp'});
+function cShow(i){cI=i;cT.forEach((b,j)=>b.classList.toggle('act',j===i));cImg.style.opacity=0;setTimeout(()=>{cImg.src='img/'+cT[i].dataset.i+'.webp';cImg.style.opacity=1},220)}
+cT.forEach((b,i)=>b.onclick=()=>{clearInterval(cTm);cShow(i)});
+hooks['s-cli']={enter(){if(!reduce)cTm=setInterval(()=>cShow((cI+1)%cT.length),3200)},leave(){clearInterval(cTm)}};
+
+/* ── 16 antes × depois ── */
+const cmp=document.getElementById('cmp');let drag=false,cA;
+function setP(x){const r=cmp.getBoundingClientRect();cmp.style.setProperty('--p',Math.max(3,Math.min(97,(x-r.left)/r.width*100)))}
+cmp.addEventListener('pointerdown',e=>{drag=true;cmp.setPointerCapture(e.pointerId);cancelAnimationFrame(cA);setP(e.clientX)});
+cmp.addEventListener('pointermove',e=>{if(drag)setP(e.clientX)});cmp.addEventListener('pointerup',()=>drag=false);
+hooks['s-cmp']={enter(){if(reduce){cmp.style.setProperty('--p',50);return}const a=performance.now();(function f(t){const p=Math.min(1,(t-a)/2000),e=p<.5?4*p*p*p:1-Math.pow(-2*p+2,3)/2;cmp.style.setProperty('--p',92-42*e);if(p<1)cA=requestAnimationFrame(f)})(a)},leave(){cancelAnimationFrame(cA)}};
+
+/* ── 17 arquitetura ── */
+const AT=['<b>React</b> monta a tela com componentes e atualiza só o que mudou. <b>Vite</b> faz o build. <b>TypeScript</b> pega erro antes de rodar.',
+ '<b>Django REST Framework</b>, em <b>Python</b>, recebe cada pedido da tela, aplica as regras da oficina e as permissões e responde.',
+ '<b>PostgreSQL</b> no <b>Supabase</b> guarda clientes, carros, OS, orçamentos, histórico e notificações, tudo relacionado.',
+ 'O código fica no <b>GitHub</b>; o <b>Render</b> publica cada atualização. O sistema está no ar em <b>revisacarapp.com</b>.'];
+const nodes=[...document.querySelectorAll('.s-arch .node')];
+nodes.forEach(n=>n.onclick=()=>{nodes.forEach(x=>x.classList.toggle('act',x===n));document.getElementById('archTxt').innerHTML=AT[+n.dataset.k]});
+
+/* ── 19 cronograma: onda ── */
+const MO=[['Fev','fundação da ideia'],['Mar','pesquisa e validação'],['Abr','requisitos e planejamento'],['Mai','protótipos e tecnologias'],['Jun','primeiras telas e testes'],['Jul','últimas telas e QA'],['Ago','correções e refinamento'],['Set','homologação e hospedagem'],['Out','monitoramento'],['Nov','defesa do TCC']];
+const x0=200,x1=1720,yb=640,amp=110;let d=`M${x0},${yb}`;const pts=[];
+for(let i=0;i<MO.length;i++){const x=x0+(x1-x0)*i/(MO.length-1),y=yb+(i%2?amp:-amp)*.9;pts.push([x,y])}
+d=`M${pts[0][0]},${pts[0][1]}`;for(let i=1;i<pts.length;i++){const [px,py]=pts[i-1],[x,y]=pts[i];d+=` C${px+(x-px)/2},${py} ${px+(x-px)/2},${y} ${x},${y}`}
+document.getElementById('wp').setAttribute('d',d);document.getElementById('wpg').setAttribute('d',d);
+const orc=document.getElementById('orc');orc.style.offsetPath=`path("${d}")`;orc.style.left='0';orc.style.top='0';orc.style.marginLeft='-60px';orc.style.marginTop='-48px';
+const months=document.getElementById('months');
+MO.forEach(([m,t],i)=>{const [x,y]=pts[i];const el=document.createElement('div');el.className='mo'+(i===MO.length-1?' last':'');el.style.cssText=`left:${x}px;top:${i%2?y+22:y-150}px;--i:${i}`;
+  el.innerHTML=i%2?`<i></i><b>${m}</b><span>${t}</span>`:`<b>${m}</b><span>${t}</span><i></i>`;months.appendChild(el)});
+
+/* ── 20 equipe ── */
+const FP=[[0,40],[200,0],[400,50],[600,10],[90,240],[300,220],[500,250],[690,230]];
+const faces=document.getElementById('faces'),fin=document.getElementById('finFaces');
+FP.forEach(([x,y],i)=>{const im=new Image();im.src=`img/team${i}.webp`;im.alt='';im.style.cssText=`left:${x}px;top:${y}px`;faces.appendChild(im);
+  const f=new Image();f.src=`img/team${i}.webp`;f.alt='';f.style.setProperty('--i',i);fin.appendChild(f)});
+const areas=[...document.querySelectorAll('#areas button')],names=document.getElementById('names');
+areas.forEach(b=>b.onclick=()=>{areas.forEach(x=>x.classList.toggle('act',x===b));const a=b.dataset.a;names.classList.toggle('f',!!a);[...names.children].forEach(p=>p.classList.toggle('hit',!!a&&p.dataset.a.split(' ').includes(a)))});
+
+document.querySelectorAll('img').forEach(i=>i.draggable=false);
+const m=/^#cena-(\d+)$/.exec(location.hash);
+show(m?Math.min(N,Math.max(1,+m[1]))-1:0,0);
+})();
+</script>
+
+</body>
+</html>
