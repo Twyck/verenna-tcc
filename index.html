@@ -521,6 +521,79 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .s-fin .links{position:absolute;left:0;right:0;bottom:118px;display:flex;justify-content:center;gap:50px;font:500 22px var(--mono)}
 .s-fin .links a{color:#fff;text-decoration:none;border-bottom:2px solid var(--coral)}
 
+
+/* ═════════ NOVOS: público · objetivo · diferenciais · depoimento · viabilidade · ferramentas ═════════ */
+.s-pub .head{position:absolute;left:120px;top:140px;width:820px;display:grid;gap:20px}
+.s-pub .who2{position:absolute;left:120px;top:440px;width:820px;display:grid;gap:22px}
+.s-pub .who2 div{border-left:6px solid var(--coral);padding:6px 0 6px 26px}
+.s-pub .who2 b{display:block;font-size:46px;font-weight:850;letter-spacing:-.03em;line-height:1.02}
+.s-pub .who2 span{font-size:26px;line-height:1.35;color:var(--soft)}
+.s-pub .src{position:absolute;right:120px;top:150px;width:700px;display:grid;gap:0}
+.s-pub .src .tg{font:500 20px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--coral);margin-bottom:10px}
+.s-pub .src div{display:grid;grid-template-columns:70px 1fr;gap:10px;padding:18px 0;border-top:2px solid var(--line)}
+.s-pub .src em{font-style:normal;font-weight:900;font-size:44px;color:var(--coral);line-height:1}
+.s-pub .src b{font-size:30px;font-weight:800;letter-spacing:-.02em}
+.s-pub .src p{grid-column:2;font-size:23px;line-height:1.35;color:var(--soft)}
+.s-pub .found{position:absolute;left:0;right:0;bottom:120px;background:var(--coral);color:#fff;padding:30px 120px;display:flex;gap:40px;align-items:center}
+.s-pub .found .tg{font:500 20px var(--mono);letter-spacing:.12em;text-transform:uppercase;white-space:nowrap}
+.s-pub .found p{font-size:34px;font-weight:700;letter-spacing:-.02em;line-height:1.2}
+
+.s-obj .head{position:absolute;left:120px;top:140px;width:960px;display:grid;gap:22px}
+.s-obj .head .stmt{font-size:58px;font-weight:800;letter-spacing:-.035em;line-height:1.04;text-wrap:balance}
+.s-obj .spec{position:absolute;left:120px;top:560px;width:960px;display:grid;grid-template-columns:1fr 1fr;gap:0 40px}
+.s-obj .spec .tg{grid-column:1/-1;font:500 20px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--coral);margin-bottom:6px}
+.s-obj .spec div{font-size:44px;font-weight:850;letter-spacing:-.03em;padding:16px 0;border-top:3px solid var(--ink)}
+.s-obj .prio{position:absolute;right:120px;top:140px;width:620px;list-style:none;display:grid;gap:0;counter-reset:pr}
+.s-obj .prio .tg{font:500 20px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--coral);margin-bottom:12px}
+.s-obj .prio li{counter-increment:pr;display:grid;grid-template-columns:56px 1fr;padding:12px 0;border-top:2px solid var(--line);font-size:25px;line-height:1.25;font-weight:600}
+.s-obj .prio li::before{content:counter(pr,decimal-leading-zero);font:500 20px var(--mono);color:var(--coral);padding-top:4px}
+.s-obj .prio li.hi{color:var(--coral)}
+
+.s-diff .head{position:absolute;left:120px;top:140px;width:1100px;display:grid;gap:20px}
+.s-diff table{position:absolute;left:120px;right:120px;top:330px;width:1680px;border-collapse:collapse;table-layout:fixed;color:var(--ink);font-family:var(--sans)}
+.s-diff th{font:500 20px var(--mono);letter-spacing:.1em;text-transform:uppercase;text-align:left;padding:0 26px 18px;color:var(--soft);vertical-align:bottom}
+.s-diff th:first-child{width:300px;padding-left:0}
+.s-diff th.rc{color:#fff;background:var(--coral);border-radius:20px 20px 0 0;padding-top:22px;font-size:22px}
+.s-diff td{font-size:27px;line-height:1.28;padding:18px 26px;border-top:2px solid var(--line);vertical-align:top}
+.s-diff td:first-child{padding-left:0;font-weight:800;font-size:28px}
+.s-diff td.rc{background:var(--coral);color:#fff;font-weight:700;border-top-color:rgba(255,255,255,.4)}
+.s-diff tr:last-child td.rc{border-radius:0 0 20px 20px}
+.s-diff td.x{color:#3a3434}
+.s-diff td.x::before{content:"✕ ";color:var(--coral);font-weight:900}
+.s-diff .src{position:absolute;left:120px;bottom:128px;font:500 20px var(--mono);color:var(--soft)}
+
+.s-quote .ph{position:absolute;left:0;top:0;width:820px;height:1080px;overflow:hidden}
+.s-quote .ph img{width:100%;height:100%;object-fit:cover;object-position:50% 30%}
+.s-quote .ph::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent 55%,var(--ink))}
+.s-quote .mark{position:absolute;left:900px;top:120px;font-size:340px;font-weight:900;line-height:.8;color:var(--coral)}
+.s-quote .q{position:absolute;left:900px;right:120px;top:380px;font-size:60px;font-weight:700;letter-spacing:-.03em;line-height:1.12}
+.s-quote .q.ph-text{border:3px dashed rgba(242,242,242,.35);border-radius:20px;padding:40px;font-size:40px;color:rgba(242,242,242,.6)}
+.s-quote .by{position:absolute;left:900px;bottom:180px;display:grid;gap:6px}
+.s-quote .by b{font-size:36px;font-weight:850}
+.s-quote .by span{font:500 22px var(--mono);color:var(--gold)}
+
+.s-viab .head{position:absolute;left:120px;top:140px;width:1300px;display:grid;gap:20px}
+.s-viab .cols{position:absolute;left:120px;right:120px;top:430px;display:grid;grid-template-columns:repeat(3,1fr);gap:34px}
+.s-viab .col{border:3px solid rgba(242,242,242,.3);border-radius:22px;padding:30px;background:rgba(13,13,13,.7);display:grid;gap:14px;align-content:start;position:relative}
+.s-viab .col small{font:500 20px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--coral)}
+.s-viab .col b{font-size:46px;font-weight:850;letter-spacing:-.03em}
+.s-viab .col ul{list-style:none;display:grid;gap:10px}
+.s-viab .col li{font-size:24px;line-height:1.3;color:var(--soft);padding-left:24px;position:relative}
+.s-viab .col li::before{content:"";position:absolute;left:0;top:12px;width:10px;height:10px;border-radius:50%;background:var(--coral)}
+.s-viab .stamp{position:absolute;right:22px;top:-26px;border:4px solid var(--ok);color:var(--ok);background:var(--ink);font-weight:900;font-size:26px;letter-spacing:.06em;padding:6px 14px;transform:rotate(6deg) scale(1.6);opacity:0;transition:all .45s cubic-bezier(.2,1.6,.4,1)}
+.s-viab .col.in .stamp{transform:rotate(6deg);opacity:1;transition-delay:.35s}
+
+.s-tools .head{position:absolute;left:120px;top:140px;width:1100px;display:grid;gap:20px}
+.s-tools .row{position:absolute;left:120px;right:120px;top:380px;display:grid;grid-template-columns:1fr 1.35fr 1fr;gap:34px}
+.s-tools .t{border-top:6px solid var(--ink);padding-top:22px;display:grid;gap:14px;align-content:start}
+.s-tools .t b{font-size:72px;font-weight:900;letter-spacing:-.04em;line-height:1}
+.s-tools .t p{font-size:27px;line-height:1.38;color:var(--soft)}
+.s-tools .t .chips{display:flex;flex-wrap:wrap;gap:8px}
+.s-tools .t .chips span{font:600 21px var(--sans);padding:8px 14px;border-radius:99px;box-shadow:inset 0 0 0 2px rgba(13,13,13,.25)}
+.s-tools .t .big{font-size:30px;font-weight:800;color:var(--ink);letter-spacing:-.01em}
+.s-tools .t .fig{font-size:120px;font-weight:900;letter-spacing:-.06em;line-height:.85;color:var(--coral)}
+.s-tools .t .fig small{font-size:30px;letter-spacing:-.01em;color:var(--ink);margin-left:10px}
+
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;transition-delay:0s!important}}
 .rot{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);z-index:99;background:var(--coral);color:#fff;font:500 13px var(--mono);padding:8px 12px;border-radius:99px;display:none}
 @media (orientation:portrait) and (max-width:700px){.rot{display:block}}
@@ -654,6 +727,22 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   </div>
 </section>
 
+<!-- NOVO · PÚBLICO-ALVO -->
+<section class="scene s-pub" data-title="Público-alvo" data-chap="O cliente" data-steps="1">
+  <div class="head"><p class="kick rv">Público-alvo</p><h2 class="h2"><span class="ln"><span>Para quem</span></span><span class="ln"><span class="c" style="--d:100">a gente construiu.</span></span></h2></div>
+  <div class="who2 rv" style="--d:300">
+    <div><b>Oficinas pequenas e médias</b><span>que querem trocar papel e planilhas por um sistema único.</span></div>
+    <div><b>O dono do carro</b><span>com uma área separada para acompanhar o processo do veículo.</span></div>
+  </div>
+  <div class="src rv" style="--d:400">
+    <span class="tg">Como ouvimos</span>
+    <div><em>01</em><b>Oficinas da região</b><p>Entrevistas com mecânicos e donos perto de casa, do trabalho e da escola.</p></div>
+    <div><em>02</em><b>SENAI</b><p>Professores, alunos que trabalham em oficina e donos: menos resistência à tecnologia.</p></div>
+    <div><em>03</em><b>Formulário online</b><p>Contatos, familiares e amigos do ramo, com as mesmas perguntas.</p></div>
+  </div>
+  <div class="found" data-at="1"><span class="tg">O que ouvimos</span><p>Muitos tentaram um sistema e abandonaram: custo alto, pouca simplicidade e falta de funções essenciais pelo valor pago.</p></div>
+</section>
+
 <!-- 10 REVELAÇÃO -->
 <section class="scene liq s-rev" data-title="RevisaCar" data-chap="RevisaCar" data-steps="1">
   <div class="veil"></div>
@@ -663,6 +752,15 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   <p class="fy rv" style="--d:700">For you</p>
   <div class="stagewin"><div class="win"><div class="bar"><i></i><i></i><i></i><span>revisacarapp.com</span></div><div class="scr"><img src="img/v2-hoje.webp" alt="Tela Hoje do RevisaCar"></div></div></div>
   <div class="demoqr" data-at="1"><img src="img/qr-revisacar.png" alt="QR code para revisacarapp.com"><b>Teste agora</b><span>revisacarapp.com</span></div>
+</section>
+
+<!-- NOVO · OBJETIVO -->
+<section class="scene light s-obj" data-title="Objetivo do projeto" data-chap="RevisaCar">
+  <div class="head"><p class="kick rv">Objetivo geral</p><p class="stmt rv" style="--d:150">Facilitar o trabalho da oficina com ferramentas feitas para a mecânica: <span class="c">menos burocracia, mais controle.</span></p></div>
+  <div class="spec rv" style="--d:400"><span class="tg">Objetivos específicos</span><div>Controle financeiro</div><div>Gestão de estoque</div><div>Ordem de serviço</div><div>Cadastro de clientes</div></div>
+  <ol class="prio rv" style="--d:500"><span class="tg">9 prioridades do projeto</span>
+    <li>Registrar a condição do carro na chegada</li><li>Registrar e consultar as reclamações do cliente</li><li>Agilizar o levantamento de peças</li><li>Pedir peças aos fornecedores com menos tempo</li><li>Menos burocracia no dia a dia</li><li>Acabar com as planilhas separadas</li><li>Acompanhar os resultados ao longo do tempo</li><li>Processos internos mais eficientes</li><li class="hi">Mais confiança do cliente, com acesso ao processo do carro</li>
+  </ol>
 </section>
 
 <!-- 11 ANATOMIA -->
@@ -753,6 +851,29 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   </div>
 </section>
 
+<!-- NOVO · DIFERENCIAIS -->
+<section class="scene light s-diff" data-title="Diferenciais" data-chap="RevisaCar">
+  <div class="head"><p class="kick rv">Diferenciais</p><h2 class="h2"><span class="ln"><span>Por que as oficinas <span class="c">ficariam.</span></span></span></h2></div>
+  <table class="rv" style="--d:300">
+    <thead><tr><th></th><th>Papel e planilha</th><th>Sistemas que as oficinas abandonaram</th><th class="rc">RevisaCar</th></tr></thead>
+    <tbody>
+      <tr><td>Custo</td><td>sem custo de sistema, mas gera retrabalho</td><td class="x">implantação e manutenção caras</td><td class="rc">proposta acessível, feita para pequena e média oficina</td></tr>
+      <tr><td>Uso no dia a dia</td><td class="x">informação se perde</td><td class="x">pouca simplicidade e interatividade</td><td class="rc">interface simples, com testes de usabilidade</td></tr>
+      <tr><td>Funções</td><td class="x">uma planilha para cada coisa</td><td class="x">faltam funções essenciais pelo valor</td><td class="rc">OS, checklist com fotos, estoque, financeiro e agenda num lugar</td></tr>
+      <tr><td>Dono do carro</td><td class="x">recebe tudo por mensagem</td><td>—</td><td class="rc">app próprio para acompanhar e aprovar orçamento</td></tr>
+    </tbody>
+  </table>
+  <p class="src rv" style="--d:600">Fonte: pesquisa de público-alvo da equipe (visitas, SENAI e formulário) e experiência do cliente com um sistema pago.</p>
+</section>
+
+<!-- NOVO · DEPOIMENTO (rascunho: aparece quando a classe draft for removida) -->
+<section class="scene s-quote draft" data-title="Depoimento" data-chap="RevisaCar">
+  <div class="ph"><img src="img/gestores-hd.webp" alt="Lucas Andrelo e Lucas Lacerda"></div>
+  <div class="mark rv">“</div>
+  <p class="q ph-text rv" style="--d:200">[ Frase do Lucas Andrelo sobre o RevisaCar · chega amanhã ]</p>
+  <div class="by rv" style="--d:400"><b>Lucas Andrelo dos Santos</b><span>Dono da Oficina 3L</span></div>
+</section>
+
 <!-- 17 ARQUITETURA -->
 <section class="scene s-arch" data-title="Arquitetura" data-chap="Construção">
   <div class="grid-bp"></div>
@@ -769,6 +890,17 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   </div>
   <div class="rbac rv" style="--d:600"><span class="lab">Controle de acesso por papel (RBAC)</span><span>usuário</span><i>→</i><span>papéis</span><i>→</i><span>permissões</span><i>→</i><span>funcionalidade</span></div>
   <div class="deploy rv" style="--d:800"><span>login separado: <b>dono</b> e <b>funcionário</b></span><hr><span><b>LGPD</b>: só dado essencial</span><hr><span>PDF com <b>escapeHtml()</b></span></div>
+</section>
+
+<!-- NOVO · VIABILIDADE -->
+<section class="scene s-viab" data-title="Viabilidade" data-chap="Construção" data-steps="3">
+  <div class="grid-bp"></div>
+  <div class="head"><p class="kick rv">Estudos de viabilidade</p><h2 class="h2"><span class="ln"><span>Dá para fazer, <span class="c">dá para manter.</span></span></span></h2><p class="lede rv" style="--d:300">Desenvolvimento viável, custos baixos e prazo adequado.</p></div>
+  <div class="cols">
+    <div class="col" data-at="1"><span class="stamp">VIÁVEL</span><small>Técnica</small><b>Equipe e stack</b><ul><li>Funções divididas por competência</li><li>React, Django REST, PostgreSQL, Supabase e Render: tecnologias de mercado, bem documentadas</li><li>Fácil de manter e de expandir</li></ul></div>
+    <div class="col" data-at="2"><span class="stamp">VIÁVEL</span><small>Legal</small><b>LGPD</b><ul><li>Lei n.º 13.709/2018</li><li>Guarda só o dado essencial para a oficina</li><li>Autenticação e controle de acesso</li><li>Tecnologias com atualização de segurança</li></ul></div>
+    <div class="col" data-at="3"><span class="stamp">VIÁVEL</span><small>Operacional</small><b>Rotina da oficina</b><ul><li>Simples de aprender e usar</li><li>Segue os processos reais da oficina</li><li>Dados centralizados e menos erro manual</li></ul></div>
+  </div>
 </section>
 
 <!-- 18 QUALIDADE -->
@@ -789,6 +921,16 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   <svg class="wave" viewBox="0 0 1920 1080" aria-hidden="true"><path class="ghost" id="wpg"/><path id="wp" pathLength="1"/></svg>
   <img class="orc" id="orc" src="img/orca-flat.webp" alt="">
   <div id="months"></div>
+</section>
+
+<!-- NOVO · FERRAMENTAS -->
+<section class="scene light s-tools" data-title="Ferramentas de gestão" data-chap="Construção">
+  <div class="head"><p class="kick rv">Ferramentas de gestão</p><h2 class="h2"><span class="ln"><span>Como oito pessoas <span class="c">se organizaram.</span></span></span></h2></div>
+  <div class="row rv" style="--d:300">
+    <div class="t"><b>WhatsApp</b><span class="fig">3<small>grupos</small></span><p>Um de marketing, um para documentação e desenvolvimento e um com o cliente, para aprovar cada etapa.</p></div>
+    <div class="t"><b>ClickUp</b><span class="fig">11<small>áreas</small></span><p>Pedido da orientadora. Tarefas, prazos, responsáveis e quadro Kanban, divididos por área:</p><div class="chips"><span>histórias de usuário</span><span>UX/UI</span><span>infra e deploy</span><span>banco de dados</span><span>arquitetura</span><span>front mecânico e cliente</span><span>backend</span><span>documentação</span><span>testes</span><span>negócio e validação</span><span>planejamento</span></div></div>
+    <div class="t"><b>GitHub</b><span class="fig" style="font-size:84px;letter-spacing:-.04em">→ Render<small>deploy automático</small></span><p>Código em equipe, controle de versões e backup. Cada atualização publica sozinha no Render.</p></div>
+  </div>
 </section>
 
 <!-- 20 EQUIPE -->
@@ -864,7 +1006,8 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 (()=>{
 ['selectstart','dragstart','copy','cut'].forEach(t=>addEventListener(t,e=>e.preventDefault(),{capture:true}));
 const stage=document.getElementById('stage'),vp=document.getElementById('vp');
-const scenes=[...stage.querySelectorAll('.scene')],N=scenes.length;
+const scenes=[...stage.querySelectorAll('.scene:not(.draft)')],N=scenes.length;
+stage.querySelectorAll('.scene.draft').forEach(d=>d.style.display='none');
 let cur=-1,step=0,busy=false;
 const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const pad=n=>String(n).padStart(2,'0');
@@ -1103,6 +1246,12 @@ const NOTES={
 's-res':['Pesquisa de campo com 53 estabelecimentos.','15 não usam sistema mas querem; 10 não usam e não querem; 28 já usam.','43 de 53 usam ou querem um sistema; quem usa reclama de limitações e custo.'],
 's-o3l':['Nosso cliente real: Oficina 3L, de Lucas Andrelo dos Santos.','2 mecânicos, cerca de 7 carros por semana, linha leve, atendimento presencial em Franco da Rocha.'],
 's-work':['O serviço é bom; a gestão era o problema.','Tudo em planilhas do Excel, orçamentos e avisos por WhatsApp e telefone, informações se perdendo.'],
+'s-pub':['Nosso público: oficinas pequenas e médias, e o dono do carro.','Ouvimos oficinas da região, o SENAI e um formulário online.','(→) O achado: muitos tentaram um sistema e abandonaram por custo, falta de simplicidade e falta de funções essenciais.'],
+'s-obj':['Objetivo geral: facilitar o trabalho da oficina com ferramentas feitas para a mecânica.','Específicos: controle financeiro, estoque, ordem de serviço e cadastro de clientes.','A prioridade 9 guia o app do cliente: dar acesso ao processo do carro aumenta a confiança.'],
+'s-diff':['Comparação com o que as oficinas usam hoje: papel e planilha, ou sistemas que acabaram abandonando.','O RevisaCar responde aos três motivos de abandono: custo, simplicidade e funções. E dá um app ao dono do carro.','Fonte: nossa pesquisa de público-alvo e a experiência do cliente com um sistema pago.'],
+'s-quote':['Depoimento do Lucas Andrelo, dono da Oficina 3L.'],
+'s-viab':['Estudo de viabilidade: desenvolvimento viável, custos baixos e prazo adequado.','Cada → carimba uma: técnica, legal (LGPD) e operacional.'],
+'s-tools':['WhatsApp com 3 grupos, um deles com o cliente para aprovar cada etapa.','ClickUp a pedido da orientadora, dividido por área. GitHub para código, versões e deploy automático.'],
 's-rev':['Apresentamos o RevisaCar: sistema de gestão para oficinas mecânicas.','Já está no ar em revisacarapp.com. (→ a tela sobe)','Objetivos: controle financeiro, estoque, ordens de serviço e clientes num só lugar.'],
 's-anat':['A primeira tela do dia: “Hoje”.','Cada →: resumo do dia, carros na oficina agora, agenda de hoje e o que precisa de atenção.'],
 's-os':['O caminho de uma OS em 5 passos: abrir, ficha de entrada, fotos obrigatórias, inspeção e quadro de atendimento.','Depois de concluída, a OS não pode mais ser alterada: integridade dos dados.'],
